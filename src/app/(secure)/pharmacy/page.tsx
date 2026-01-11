@@ -41,7 +41,7 @@ export default function PharmacyPage() {
       );
       setMedications(data);
     } catch (error) {
-      console.error("[v0] Failed to load medications:", error);
+      console.error("Failed to load medications:", error);
       toast.error("Failed to load medications");
     } finally {
       setLoading(false);

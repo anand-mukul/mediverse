@@ -101,7 +101,7 @@ export default function DiagnosticsPage() {
       );
       setAnalysisHistory(transformedHistory);
     } catch (error) {
-      console.error("[v0] History fetch error:", error);
+      console.error("History fetch error:", error);
       toast.error("Failed to load analysis history");
     } finally {
       setLoading(false);
@@ -192,7 +192,7 @@ export default function DiagnosticsPage() {
         });
       }
     } catch (error) {
-      console.error("[v0] Analysis error:", error);
+      console.error("Analysis error:", error);
       toast.dismiss();
       toast.error("Analysis failed", {
         description:

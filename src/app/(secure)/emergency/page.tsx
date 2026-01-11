@@ -127,7 +127,7 @@ export default function EmergencyPage() {
         duration: 10000,
       });
     } catch (err) {
-      console.error("[v0] Emergency trigger error:", err);
+      console.error("Emergency trigger error:", err);
       toast.dismiss();
       toast.error("Failed to trigger emergency", {
         description: "Please call 911 directly",

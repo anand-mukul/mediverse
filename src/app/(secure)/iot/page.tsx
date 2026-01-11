@@ -30,7 +30,7 @@ export default function IoTControlPage() {
       setDevices(data);
       if (data.length > 0) setSelectedDevice(data[0]);
     } catch (error) {
-      console.error("[v0] Failed to load devices:", error);
+      console.error("Failed to load devices:", error);
       toast.error("Failed to load devices");
     } finally {
       setLoading(false);
@@ -51,7 +51,7 @@ export default function IoTControlPage() {
       toast.success(`Command "${label}" sent successfully`);
       fetchDevices();
     } catch (error) {
-      console.error("[v0] Failed to send command:", error);
+      console.error("Failed to send command:", error);
       toast.error("Failed to send command");
     }
   };

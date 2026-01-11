@@ -61,7 +61,7 @@ export default function VoiceCommandPage() {
         setTimeout(() => router.push(result.response), 1000);
       }
     } catch (err) {
-      console.error("[v0] Voice command error:", err);
+      console.error("Voice command error:", err);
       toast.error("Failed to process command");
     } finally {
       setIsProcessing(false);
