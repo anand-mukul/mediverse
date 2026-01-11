@@ -47,7 +47,7 @@ const Footer = () => {
                 <Heart className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">MediVerse.AI</h3>
+                <h3 className="text-xl font-bold text-white">MediVerse</h3>
                 <p className="text-sm text-slate-400">
                   Intelligent Healthcare Ecosystem
                 </p>
@@ -97,7 +97,7 @@ const Footer = () => {
         <div className="border-t border-slate-800/50 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-slate-400 text-sm">
-              © {new Date().getFullYear()} MediVerse.AI. All rights reserved.
+              © {new Date().getFullYear()} MediVerse. All rights reserved.
             </p>
             <div className="flex items-center space-x-6">
               <span className="text-sm text-slate-400 flex items-center">

@@ -10,7 +10,7 @@ export default function SignupPage() {
             Create your account
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Join MediVerse.AI and start your health journey
+            Join MediVerse and start your health journey
           </p>
         </div>
 

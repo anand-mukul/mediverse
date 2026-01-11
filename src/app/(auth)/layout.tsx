@@ -2,8 +2,8 @@ import type React from "react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Authentication - MediVerse.AI",
-  description: "Sign in or create your MediVerse.AI account",
+  title: "Authentication - MediVerse",
+  description: "Sign in or create your MediVerse account",
 };
 
 export default function AuthLayout({

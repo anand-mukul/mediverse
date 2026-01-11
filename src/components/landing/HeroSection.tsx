@@ -8,7 +8,7 @@ import { Brain, Stethoscope, Activity, Zap, ChevronRight } from "lucide-react";
 const HeroSection = () => {
   const [displayText, setDisplayText] = useState("");
   const [isTyping, setIsTyping] = useState(true);
-  const fullText = "MediVerse.AI";
+  const fullText = "MediVerse";
 
   useEffect(() => {
     let currentIndex = 0;

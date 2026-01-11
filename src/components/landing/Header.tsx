@@ -34,7 +34,7 @@ const Header = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                MediVerse.AI
+                MediVerse
               </h1>
               <p className="text-xs text-slate-400">Intelligent Healthcare</p>
             </div>

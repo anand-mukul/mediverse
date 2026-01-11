@@ -12,7 +12,7 @@ import "./globals.css";
 // })
 
 export const metadata: Metadata = {
-  title: "MediVerse.AI - Intelligent Health Ecosystem",
+  title: "MediVerse - Intelligent Health Ecosystem",
   description:
     "Where Medical Excellence Meets the Universe of Possibilities. AI-powered healthcare solutions for the modern world.",
   keywords: [
