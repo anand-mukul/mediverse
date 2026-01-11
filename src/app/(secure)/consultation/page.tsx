@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -15,7 +16,7 @@ import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { consultationService } from "@/services/consultation.service";
 import { authService } from "@/services/auth.service";
-import type { Doctor, AppointmentBooking } from "@/types/api";
+import type { Doctor } from "@/types/api";
 
 const SPECIALTIES = [
   "all",
@@ -135,16 +136,20 @@ export default function ConsultationPage() {
 
     setIsBooking(true);
 
-    const booking: AppointmentBooking = {
-      doctorId: selectedDoctor.id,
+    const bookingPayload = {
+      user_id: user.id,
+      doctor_id: selectedDoctor.id,
+      doctor_name: selectedDoctor.name,
+      specialty: selectedDoctor.specialty,
       date: selectedDate.toISOString().split("T")[0],
       time: selectedTimeSlot,
       type: consultationType,
-      notes,
+      notes: notes || "",
+      status: "pending",
     };
 
     try {
-      await consultationService.bookAppointment(booking);
+      await consultationService.bookAppointment(bookingPayload as any);
 
       toast.success("Appointment booked successfully!", {
         description: `Your appointment with ${
@@ -161,6 +166,7 @@ export default function ConsultationPage() {
         router.push("/dashboard");
       }, 2000);
     } catch (err) {
+      console.error("[v0] Booking error:", err);
       const errorMessage =
         err instanceof Error ? err.message : "Failed to book appointment";
       toast.error("Booking failed", {

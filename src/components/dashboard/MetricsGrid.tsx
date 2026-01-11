@@ -1,3 +1,4 @@
+import type React from "react";
 import {
   Heart,
   Activity,
@@ -13,10 +14,43 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils";
 
 interface MetricsGridProps {
-  metrics: HealthMetrics;
+  metrics?: HealthMetrics | null;
 }
 
 export default function MetricsGrid({ metrics }: MetricsGridProps) {
+  if (!metrics) {
+    return (
+      <div>
+        <SectionHeader
+          title="Vital Metrics"
+          description="Real-time health monitoring data"
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {[...Array(6)].map((_, i) => (
+            <MedicalCard key={i} interactive>
+              <div className="space-y-3">
+                <div className="h-12 bg-muted rounded-lg" />
+                <div className="space-y-2">
+                  <div className="h-4 bg-muted rounded w-24" />
+                  <div className="h-6 bg-muted rounded w-16" />
+                </div>
+              </div>
+            </MedicalCard>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const safeMetrics = {
+    heart_rate: metrics.heart_rate || 72,
+    blood_pressure: metrics.blood_pressure || "120/80",
+    temperature: metrics.temperature || 98.6,
+    steps_today: metrics.steps_today ?? 0,
+    oxygen_level: metrics.oxygen_level ?? 98,
+    sleep_hours: metrics.sleep_hours ?? 7.5,
+  };
+
   const metricCards: Array<{
     icon: React.ElementType;
     title: string;
@@ -30,14 +64,14 @@ export default function MetricsGrid({ metrics }: MetricsGridProps) {
     {
       icon: Heart,
       title: "Heart Rate",
-      value: `${metrics.heart_rate}`,
+      value: `${safeMetrics.heart_rate}`,
       unit: "bpm",
       status:
-        metrics.heart_rate >= 60 && metrics.heart_rate <= 100
+        safeMetrics.heart_rate >= 60 && safeMetrics.heart_rate <= 100
           ? "success"
           : "warning",
       statusText:
-        metrics.heart_rate >= 60 && metrics.heart_rate <= 100
+        safeMetrics.heart_rate >= 60 && safeMetrics.heart_rate <= 100
           ? "Normal"
           : "Check",
       color: "text-destructive",
@@ -46,7 +80,7 @@ export default function MetricsGrid({ metrics }: MetricsGridProps) {
     {
       icon: Activity,
       title: "Blood Pressure",
-      value: metrics.blood_pressure,
+      value: safeMetrics.blood_pressure,
       unit: "mmHg",
       status: "success",
       statusText: "Optimal",
@@ -56,14 +90,14 @@ export default function MetricsGrid({ metrics }: MetricsGridProps) {
     {
       icon: Thermometer,
       title: "Temperature",
-      value: `${metrics.temperature}`,
+      value: `${safeMetrics.temperature}`,
       unit: "°F",
       status:
-        metrics.temperature >= 97 && metrics.temperature <= 99
+        safeMetrics.temperature >= 97 && safeMetrics.temperature <= 99
           ? "success"
           : "warning",
       statusText:
-        metrics.temperature >= 97 && metrics.temperature <= 99
+        safeMetrics.temperature >= 97 && safeMetrics.temperature <= 99
           ? "Normal"
           : "Check",
       color: "text-warning",
@@ -72,30 +106,30 @@ export default function MetricsGrid({ metrics }: MetricsGridProps) {
     {
       icon: TrendingUp,
       title: "Steps Today",
-      value: metrics.steps_today.toLocaleString(),
+      value: safeMetrics.steps_today.toLocaleString(),
       unit: "steps",
-      status: metrics.steps_today >= 8000 ? "success" : "info",
-      statusText: metrics.steps_today >= 8000 ? "Active" : "Low",
+      status: safeMetrics.steps_today >= 8000 ? "success" : "info",
+      statusText: safeMetrics.steps_today >= 8000 ? "Active" : "Low",
       color: "text-secondary",
       bgColor: "bg-secondary/10",
     },
     {
       icon: Droplets,
       title: "Oxygen Level",
-      value: `${metrics.oxygen_level || 98}`,
+      value: `${safeMetrics.oxygen_level}`,
       unit: "%",
-      status: (metrics.oxygen_level || 98) >= 95 ? "success" : "error",
-      statusText: (metrics.oxygen_level || 98) >= 95 ? "Excellent" : "Low",
+      status: safeMetrics.oxygen_level >= 95 ? "success" : "error",
+      statusText: safeMetrics.oxygen_level >= 95 ? "Excellent" : "Low",
       color: "text-info",
       bgColor: "bg-info/10",
     },
     {
       icon: Moon,
       title: "Sleep",
-      value: `${metrics.sleep_hours || 7.5}`,
+      value: `${safeMetrics.sleep_hours}`,
       unit: "hours",
-      status: (metrics.sleep_hours || 0) >= 7 ? "success" : "warning",
-      statusText: (metrics.sleep_hours || 0) >= 7 ? "Good" : "Low",
+      status: safeMetrics.sleep_hours >= 7 ? "success" : "warning",
+      statusText: safeMetrics.sleep_hours >= 7 ? "Good" : "Low",
       color: "text-indigo-500",
       bgColor: "bg-indigo-500/10",
     },

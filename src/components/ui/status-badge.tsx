@@ -15,19 +15,19 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status, children, className, showDot = true }: StatusBadgeProps) {
   const statusStyles = {
-    success: "bg-success/10 text-success border-success/20",
-    warning: "bg-warning/10 text-warning-foreground border-warning/20",
-    error: "bg-destructive/10 text-destructive border-destructive/20",
-    info: "bg-info/10 text-info border-info/20",
-    neutral: "bg-muted text-muted-foreground border-border",
+    success: "bg-success/10 text-success border-success/20 dark:bg-success/20 dark:text-success",
+    warning: "bg-warning/10 text-warning-foreground border-warning/20 dark:bg-warning/20 dark:text-warning",
+    error: "bg-destructive/10 text-destructive border-destructive/20 dark:bg-destructive/20 dark:text-destructive",
+    info: "bg-info/10 text-info border-info/20 dark:bg-info/20 dark:text-info",
+    neutral: "bg-muted text-muted-foreground border-border dark:bg-muted dark:text-muted-foreground",
   }
 
   const dotStyles = {
-    success: "bg-success",
-    warning: "bg-warning",
-    error: "bg-destructive",
-    info: "bg-info",
-    neutral: "bg-muted-foreground",
+    success: "bg-success dark:bg-success",
+    warning: "bg-warning dark:bg-warning",
+    error: "bg-destructive dark:bg-destructive",
+    info: "bg-info dark:bg-info",
+    neutral: "bg-muted-foreground dark:bg-muted-foreground",
   }
 
   return (

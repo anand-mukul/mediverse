@@ -25,21 +25,21 @@ export default function MedicationGrid({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-slate-900">
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
           Available Medications
         </h2>
-        <div className="text-sm text-slate-600">
+        <div className="text-sm text-slate-600 dark:text-slate-400">
           {medications.length} medications found
         </div>
       </div>
 
       {medications.length === 0 ? (
         <div className="text-center py-12">
-          <Pill className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">
+          <Pill className="h-16 w-16 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
             No medications found
           </h3>
-          <p className="text-slate-600">
+          <p className="text-slate-600 dark:text-slate-400">
             Try adjusting your search or filter criteria
           </p>
         </div>
@@ -62,16 +62,16 @@ export default function MedicationGrid({
                       <div className="text-4xl">{med.imageUrl}</div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="text-lg font-bold text-slate-900">
+                          <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                             {med.name}
                           </h3>
                           {med.brand && (
-                            <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
+                            <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
                               {med.brand}
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-slate-600">
+                        <p className="text-sm text-slate-600 dark:text-slate-400">
                           {med.genericName}
                         </p>
                       </div>
@@ -80,16 +80,16 @@ export default function MedicationGrid({
                     <div className="text-right">
                       {med.discountedPrice ? (
                         <div>
-                          <div className="text-sm text-slate-400 line-through">
-                            ${med.price.toFixed(2)}
+                          <div className="text-sm text-slate-400 dark:text-slate-500 line-through">
+                            ₹{med.price.toFixed(2)}
                           </div>
-                          <div className="text-xl font-bold text-green-600">
-                            ${med.discountedPrice.toFixed(2)}
+                          <div className="text-xl font-bold text-green-600 dark:text-green-400">
+                            ₹{med.discountedPrice.toFixed(2)}
                           </div>
                         </div>
                       ) : (
-                        <div className="text-xl font-bold text-slate-900">
-                          ${med.price.toFixed(2)}
+                        <div className="text-xl font-bold text-slate-900 dark:text-slate-100">
+                          ₹{med.price.toFixed(2)}
                         </div>
                       )}
                     </div>
@@ -98,28 +98,40 @@ export default function MedicationGrid({
                   {/* Details */}
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <p className="text-sm text-slate-600">Dosage</p>
-                      <p className="font-medium text-slate-900">{med.dosage}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        Dosage
+                      </p>
+                      <p className="font-medium text-slate-900 dark:text-slate-100">
+                        {med.dosage}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-600">Form</p>
-                      <p className="font-medium text-slate-900">{med.form}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        Form
+                      </p>
+                      <p className="font-medium text-slate-900 dark:text-slate-100">
+                        {med.form}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-600">Category</p>
-                      <p className="font-medium text-slate-900">
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        Category
+                      </p>
+                      <p className="font-medium text-slate-900 dark:text-slate-100">
                         {med.category}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-600">Stock</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                        Stock
+                      </p>
                       <div className="flex items-center gap-2">
                         <div
                           className={`w-2 h-2 rounded-full ${
                             med.inStock ? "bg-green-500" : "bg-red-500"
                           }`}
                         />
-                        <span className="font-medium text-slate-900">
+                        <span className="font-medium text-slate-900 dark:text-slate-100">
                           {med.inStock
                             ? `${med.stockCount} left`
                             : "Out of stock"}
@@ -129,7 +141,7 @@ export default function MedicationGrid({
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm text-slate-700 mb-4 line-clamp-2">
+                  <p className="text-sm text-slate-700 dark:text-slate-300 mb-4 line-clamp-2">
                     {med.description}
                   </p>
 
@@ -137,8 +149,8 @@ export default function MedicationGrid({
                   <div className="flex items-center gap-4 mb-4">
                     {med.requiresPrescription && (
                       <div className="flex items-center gap-2">
-                        <Shield className="h-4 w-4 text-blue-600" />
-                        <span className="text-sm text-blue-600 font-medium">
+                        <Shield className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">
                           Prescription Required
                         </span>
                       </div>
@@ -146,8 +158,8 @@ export default function MedicationGrid({
 
                     {!med.inStock && (
                       <div className="flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4 text-amber-600" />
-                        <span className="text-sm text-amber-600 font-medium">
+                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                        <span className="text-sm text-amber-600 dark:text-amber-400 font-medium">
                           Backorder Available
                         </span>
                       </div>
@@ -158,7 +170,7 @@ export default function MedicationGrid({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                      <span className="text-sm text-slate-600">
+                      <span className="text-sm text-slate-600 dark:text-slate-400">
                         4.8 (256 reviews)
                       </span>
                     </div>

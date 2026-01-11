@@ -19,16 +19,14 @@ export const pharmacyService = {
     if (category) params.append("category", category);
     if (search) params.append("search", search);
 
-    const endpoint = `/pharmacy/medications${
+    const endpoint = `/medications${
       params.toString() ? `?${params.toString()}` : ""
     }`;
     return await apiClient.get<Medication[]>(endpoint);
   },
 
   async getMedicationById(medicationId: string): Promise<Medication> {
-    return await apiClient.get<Medication>(
-      `/pharmacy/medications/${medicationId}`
-    );
+    return await apiClient.get<Medication>(`/medications/${medicationId}`);
   },
 
   async getPrescriptions(userId: string): Promise<Prescription[]> {

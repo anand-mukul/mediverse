@@ -25,25 +25,20 @@ export default function IoTHeader({ onRefresh }: IoTHeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left side */}
           <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => router.back()}
-              className="hover:bg-slate-100"
-            >
+            <Button variant="ghost" size="icon" onClick={() => router.back()}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
 
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">
+              <h1 className="text-2xl font-bold text-foreground">
                 IoT Control Panel
               </h1>
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-muted-foreground">
                 Manage your smart health devices and bots
               </p>
             </div>
@@ -51,14 +46,18 @@ export default function IoTHeader({ onRefresh }: IoTHeaderProps) {
 
           {/* Right side */}
           <div className="flex items-center gap-3">
-            <Button variant="outline" onClick={onRefresh} className="gap-2">
+            <Button
+              variant="outline"
+              onClick={onRefresh}
+              className="gap-2 bg-transparent"
+            >
               <RefreshCw className="h-4 w-4" />
               Refresh Status
             </Button>
 
             <Button
               variant="outline"
-              className="gap-2 border-green-200 bg-green-50 text-green-700 hover:bg-green-100"
+              className="gap-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900"
             >
               <Wifi className="h-4 w-4" />
               Network: Strong
@@ -66,7 +65,8 @@ export default function IoTHeader({ onRefresh }: IoTHeaderProps) {
 
             <Button
               onClick={handleEmergency}
-              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white gap-2"
+              variant="destructive"
+              className="gap-2"
             >
               <AlertTriangle className="h-5 w-5" />
               Emergency

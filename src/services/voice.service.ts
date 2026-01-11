@@ -10,14 +10,34 @@ import type { VoiceCommand, VoiceQuery } from "@/types/api";
 
 export const voiceService = {
   async processVoiceQuery(query: VoiceQuery): Promise<VoiceCommand> {
-    return await apiClient.post<VoiceCommand>("/voice/query", query);
+    try {
+      return await apiClient.post<VoiceCommand>("/voice/query", query);
+    } catch (error) {
+      return {
+        id: String(Date.now()),
+        command: query.query,
+        response:
+          "I'm sorry, I couldn't process your request. Please try again.",
+        timestamp: new Date().toISOString(),
+        successful: false,
+        action: undefined,
+      };
+    }
   },
 
   async getVoiceHistory(userId: string): Promise<VoiceCommand[]> {
-    return await apiClient.get<VoiceCommand[]>(`/voice/history/${userId}`);
+    try {
+      return await apiClient.get<VoiceCommand[]>(`/voice/history/${userId}`);
+    } catch {
+      return [];
+    }
   },
 
   async clearVoiceHistory(userId: string): Promise<void> {
-    await apiClient.delete(`/voice/history/${userId}`);
+    try {
+      await apiClient.delete(`/voice/history/${userId}`);
+    } catch {
+      // Silent failure
+    }
   },
 };

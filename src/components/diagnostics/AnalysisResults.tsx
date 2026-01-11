@@ -16,7 +16,7 @@ import { format } from "date-fns";
 
 interface SymptomAnalysis {
   id: string;
-  symptoms: string; // Changed from string[] to string to match what's being passed
+  symptoms: string;
   timestamp: Date;
   analysis: {
     possibleConditions: Array<{
@@ -88,9 +88,13 @@ export default function AnalysisResults({
 
   const exportAnalysis = () => {
     // In a real app, this would generate a PDF or download the analysis
+    const timestamp = analysis.timestamp || new Date();
+    const safeDate =
+      timestamp instanceof Date ? timestamp : new Date(timestamp);
+
     const analysisText = `
 AI Symptom Analysis Report
-Generated: ${format(analysis.timestamp, "PPP p")}
+Generated: ${format(safeDate, "PPP p")}
 ---
 Symptoms: ${analysis.symptoms}
 ---
@@ -120,12 +124,12 @@ ${analysis.analysis.disclaimer}
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `symptom-analysis-${format(
-      analysis.timestamp,
-      "yyyy-MM-dd-HH-mm"
-    )}.txt`;
+    a.download = `symptom-analysis-${format(safeDate, "yyyy-MM-dd-HH-mm")}.txt`;
     a.click();
   };
+
+  const timestamp = analysis.timestamp || new Date();
+  const safeDate = timestamp instanceof Date ? timestamp : new Date(timestamp);
 
   return (
     <Card className="border-0 shadow-lg">
@@ -135,9 +139,9 @@ ${analysis.analysis.disclaimer}
             <FileText className="h-5 w-5 text-green-600" />
             Analysis Results
           </CardTitle>
-          <div className="flex items-center gap-2 text-sm text-slate-600">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Clock className="h-4 w-4" />
-            {format(analysis.timestamp, "PPP p")}
+            {format(safeDate, "PPP p")}
           </div>
         </div>
       </CardHeader>

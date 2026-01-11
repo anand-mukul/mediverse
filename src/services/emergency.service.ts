@@ -1,7 +1,7 @@
 /**
  * Emergency Service
  * API endpoints:
- * - POST /emergency/request
+ * - POST /emergency/trigger
  * - GET /emergency/status/:requestId
  * - GET /emergency/contacts/:userId
  */
@@ -17,9 +17,15 @@ export const emergencyService = {
   async createEmergencyRequest(
     request: EmergencyRequest
   ): Promise<EmergencyResponse> {
+    const emergencyTriggerRequest = {
+      user_id: request.user_id,
+      type: request.type || "medical_emergency",
+      location: request.location || undefined,
+    };
+
     return await apiClient.post<EmergencyResponse>(
-      "/emergency/request",
-      request
+      "/emergency/trigger",
+      emergencyTriggerRequest
     );
   },
 

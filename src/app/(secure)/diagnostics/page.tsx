@@ -60,16 +60,18 @@ export default function DiagnosticsPage() {
         return;
       }
 
-      const history = await diagnosticsService.getAnalysisHistory(user.id);
-      const transformedHistory: ExtendedSymptomAnalysis[] = history.map(
-        (item) => ({
+      try {
+        const history = await diagnosticsService.getAnalysisHistory(user.id);
+        const transformedHistory: ExtendedSymptomAnalysis[] = (
+          Array.isArray(history) ? history : []
+        ).map((item) => ({
           id: item.id,
           symptoms: Array.isArray(item.symptoms)
             ? item.symptoms.join(", ")
             : item.symptoms,
           timestamp: new Date(item.analyzedAt),
           analysis: {
-            possibleConditions: item.possibleConditions.map((cond) => ({
+            possibleConditions: (item.possibleConditions || []).map((cond) => ({
               condition: cond.name,
               probability:
                 cond.probability > 0.7
@@ -88,7 +90,7 @@ export default function DiagnosticsPage() {
                 : item.urgencyLevel === "medium"
                 ? ("routine" as const)
                 : ("monitor" as const),
-            recommendations: item.recommendations,
+            recommendations: item.recommendations || [],
             nextSteps: [
               "Consult with a healthcare professional",
               "Monitor symptoms",
@@ -97,12 +99,12 @@ export default function DiagnosticsPage() {
             disclaimer:
               "This is an AI-generated assessment and not a substitute for professional medical advice.",
           },
-        })
-      );
-      setAnalysisHistory(transformedHistory);
-    } catch (error) {
-      console.error("History fetch error:", error);
-      toast.error("Failed to load analysis history");
+        }));
+        setAnalysisHistory(transformedHistory);
+      } catch (historyError) {
+        console.error("History fetch error:", historyError);
+        setAnalysisHistory([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -136,24 +138,28 @@ export default function DiagnosticsPage() {
         user.id
       );
 
+      const analyzedAt = analysis.analyzedAt || new Date().toISOString();
+
       const transformedAnalysis: ExtendedSymptomAnalysis = {
         id: analysis.id,
         symptoms: Array.isArray(analysis.symptoms)
           ? analysis.symptoms.join(", ")
           : symptoms,
-        timestamp: new Date(analysis.analyzedAt),
+        timestamp: new Date(analyzedAt),
         analysis: {
-          possibleConditions: analysis.possibleConditions.map((cond) => ({
-            condition: cond.name,
-            probability:
-              cond.probability > 0.7
-                ? ("high" as const)
-                : cond.probability > 0.4
-                ? ("medium" as const)
-                : ("low" as const),
-            confidence: cond.probability,
-            description: cond.description,
-          })),
+          possibleConditions: (analysis.possibleConditions || []).map(
+            (cond) => ({
+              condition: cond.name,
+              probability:
+                cond.probability > 0.7
+                  ? ("high" as const)
+                  : cond.probability > 0.4
+                  ? ("medium" as const)
+                  : ("low" as const),
+              confidence: cond.probability,
+              description: cond.description,
+            })
+          ),
           urgency:
             analysis.urgencyLevel === "critical"
               ? ("emergency" as const)
@@ -162,7 +168,7 @@ export default function DiagnosticsPage() {
               : analysis.urgencyLevel === "medium"
               ? ("routine" as const)
               : ("monitor" as const),
-          recommendations: analysis.recommendations,
+          recommendations: analysis.recommendations || [],
           nextSteps: [
             "Consult with a healthcare professional",
             "Monitor symptoms",
@@ -181,7 +187,6 @@ export default function DiagnosticsPage() {
         description: "Preliminary assessment ready for review",
       });
 
-      // Alert if urgent or emergency
       if (
         transformedAnalysis.analysis.urgency === "emergency" ||
         transformedAnalysis.analysis.urgency === "urgent"
@@ -192,7 +197,7 @@ export default function DiagnosticsPage() {
         });
       }
     } catch (error) {
-      console.error("Analysis error:", error);
+      console.error("[v0] Analysis error:", error);
       toast.dismiss();
       toast.error("Analysis failed", {
         description:

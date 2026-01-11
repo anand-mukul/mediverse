@@ -8,7 +8,7 @@ export default function ConsultationHeader() {
   const router = useRouter();
 
   return (
-    <header className="sticky top-0 z-50 glass border-b border-border">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
@@ -38,11 +38,11 @@ export default function ConsultationHeader() {
                 <span>Video</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-foreground">
-                <Phone className="h-4 w-4 text-success" />
+                <Phone className="h-4 w-4 text-green-600 dark:text-green-400" />
                 <span>Phone</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-foreground">
-                <Users className="h-4 w-4 text-secondary" />
+                <Users className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                 <span>In-Person</span>
               </div>
             </div>

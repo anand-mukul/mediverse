@@ -44,19 +44,21 @@ export default function BookingCard({
       id: "video",
       label: "Video Call",
       icon: Video,
-      color: "bg-blue-100 text-blue-600",
+      color: "bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300",
     },
     {
       id: "phone",
       label: "Phone Call",
       icon: Phone,
-      color: "bg-green-100 text-green-600",
+      color:
+        "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300",
     },
     {
       id: "in-person",
       label: "In-Person",
       icon: Users,
-      color: "bg-purple-100 text-purple-600",
+      color:
+        "bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300",
     },
   ];
 
@@ -64,11 +66,14 @@ export default function BookingCard({
     return format(date, "EEEE, MMMM d, yyyy");
   };
 
+  const platformFee = 99.99;
+  const taxRate = 0.08;
+
   return (
     <Card className="border-0 shadow-lg sticky top-24">
       <CardHeader>
         <CardTitle>Appointment Details</CardTitle>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-600 dark:text-slate-400">
           Review and confirm your booking
         </p>
       </CardHeader>
@@ -76,41 +81,45 @@ export default function BookingCard({
       <CardContent className="space-y-6">
         {/* Selected Doctor */}
         {selectedDoctor ? (
-          <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
+          <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950 dark:to-purple-950 rounded-xl border border-blue-200 dark:border-blue-800">
             <div className="flex items-start gap-4">
-              <div className="text-3xl">👨‍⚕️</div>
+              <div className="text-3xl">{selectedDoctor.avatar}</div>
               <div>
-                <h4 className="font-semibold text-slate-900">
+                <h4 className="font-semibold text-slate-900 dark:text-slate-100">
                   {selectedDoctor.name}
                 </h4>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-slate-600 dark:text-slate-400">
                   {selectedDoctor.specialty}
                 </p>
                 <div className="flex items-center gap-4 mt-2 text-sm">
                   <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4 text-slate-500" />
-                    <span className="font-medium">
+                    <Calendar className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                    <span className="font-medium text-slate-900 dark:text-slate-100">
                       {formatDate(selectedDate)}
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <Clock className="h-4 w-4 text-slate-500" />
-                    <span className="font-medium">{selectedTimeSlot}</span>
+                    <Clock className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                    <span className="font-medium text-slate-900 dark:text-slate-100">
+                      {selectedTimeSlot}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center">
+          <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
             <User className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-            <p className="text-slate-600">Select a doctor to continue</p>
+            <p className="text-slate-600 dark:text-slate-400">
+              Select a doctor to continue
+            </p>
           </div>
         )}
 
         {/* Consultation Type */}
         <div>
-          <h4 className="font-semibold text-slate-900 mb-3">
+          <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3">
             Consultation Type
           </h4>
           <div className="grid grid-cols-3 gap-2">
@@ -128,15 +137,17 @@ export default function BookingCard({
                     flex flex-col items-center p-3 rounded-xl border-2 transition-all
                     ${
                       isSelected
-                        ? "border-blue-500 bg-blue-50"
-                        : "border-slate-200 hover:border-slate-300"
+                        ? "border-blue-500 bg-blue-50 dark:bg-blue-950"
+                        : "border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
                     }
                   `}
                 >
                   <div className={`p-2 rounded-lg ${type.color}`}>
                     <type.icon className="h-5 w-5" />
                   </div>
-                  <span className="text-sm font-medium mt-2">{type.label}</span>
+                  <span className="text-sm font-medium mt-2 text-slate-900 dark:text-slate-100">
+                    {type.label}
+                  </span>
                 </button>
               );
             })}
@@ -145,8 +156,8 @@ export default function BookingCard({
 
         {/* Notes */}
         <div>
-          <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
-            <FileText className="h-5 w-5 text-slate-500" />
+          <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
+            <FileText className="h-5 w-5 text-slate-500 dark:text-slate-400" />
             Additional Notes
           </h4>
           <Textarea
@@ -155,46 +166,56 @@ export default function BookingCard({
             onChange={(e) => onNotesChange(e.target.value)}
             className="min-h-[100px]"
           />
-          <p className="text-xs text-slate-500 mt-2">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
             Your notes will help the doctor prepare for your consultation
           </p>
         </div>
 
         {/* Cost Summary */}
         {selectedDoctor && (
-          <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-            <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
-              <CreditCard className="h-5 w-5 text-slate-500" />
+          <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700">
+            <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
+              <CreditCard className="h-5 w-5 text-slate-500 dark:text-slate-400" />
               Cost Summary
             </h4>
 
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-slate-600">Consultation Fee</span>
-                <span className="font-medium">
-                  ${selectedDoctor.consultationFee}
+                <span className="text-slate-600 dark:text-slate-400">
+                  Consultation Fee
+                </span>
+                <span className="font-medium text-slate-900 dark:text-slate-100">
+                  ₹{selectedDoctor.consultationFee}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-slate-600">Platform Fee</span>
-                <span className="font-medium">$9.99</span>
+                <span className="text-slate-600 dark:text-slate-400">
+                  Platform Fee
+                </span>
+                <span className="font-medium text-slate-900 dark:text-slate-100">
+                  ₹{platformFee}
+                </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-slate-600">Tax</span>
-                <span className="font-medium">
-                  ${(selectedDoctor.consultationFee * 0.08).toFixed(2)}
+                <span className="text-slate-600 dark:text-slate-400">
+                  Tax (8%)
+                </span>
+                <span className="font-medium text-slate-900 dark:text-slate-100">
+                  ₹{(selectedDoctor.consultationFee * taxRate).toFixed(2)}
                 </span>
               </div>
 
-              <div className="pt-2 border-t border-slate-200">
+              <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
                 <div className="flex justify-between font-bold text-lg">
-                  <span>Total</span>
-                  <span className="text-blue-600">
-                    $
+                  <span className="text-slate-900 dark:text-slate-100">
+                    Total
+                  </span>
+                  <span className="text-blue-600 dark:text-blue-400">
+                    ₹
                     {(
                       selectedDoctor.consultationFee +
-                      9.99 +
-                      selectedDoctor.consultationFee * 0.08
+                      platformFee +
+                      selectedDoctor.consultationFee * taxRate
                     ).toFixed(2)}
                   </span>
                 </div>
@@ -220,12 +241,12 @@ export default function BookingCard({
         </Button>
 
         {/* Disclaimer */}
-        <div className="text-xs text-slate-500">
+        <div className="text-xs text-slate-500 dark:text-slate-400">
           <p>
             • Appointment can be cancelled up to 24 hours before scheduled time
           </p>
           <p>• Your payment will be securely processed</p>
-          <p>• You&absp;ll receive confirmation via email and SMS</p>
+          <p>• You&apos;ll receive confirmation via email and SMS</p>
         </div>
       </CardContent>
     </Card>

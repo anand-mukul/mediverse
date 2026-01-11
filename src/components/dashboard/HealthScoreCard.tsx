@@ -7,33 +7,28 @@ import { MedicalCard } from "@/components/ui/medical-card";
 import { cn } from "@/lib/utils";
 
 interface HealthScoreCardProps {
-  healthScore: HealthScore;
+  healthScore?: HealthScore | null;
   userName?: string;
 }
 
 export default function HealthScoreCard({ healthScore }: HealthScoreCardProps) {
+  if (!healthScore) {
+    return (
+      <MedicalCard elevated className="overflow-hidden">
+        <div className="p-6 md:p-8">
+          <div className="flex items-center justify-center min-h-[200px]">
+            <div className="text-center space-y-2">
+              <p className="text-muted-foreground">
+                Health score data unavailable
+              </p>
+            </div>
+          </div>
+        </div>
+      </MedicalCard>
+    );
+  }
+
   const { score, trend, factors } = healthScore;
-
-  const getScoreColor = (score: number) => {
-    if (score >= 90) return "from-success to-success/80";
-    if (score >= 75) return "from-primary to-primary/80";
-    if (score >= 60) return "from-warning to-warning/80";
-    return "from-destructive to-destructive/80";
-  };
-
-  const getScoreMessage = (score: number) => {
-    if (score >= 90) return "Excellent health status";
-    if (score >= 75) return "Good overall health";
-    if (score >= 60) return "Fair health, room for improvement";
-    return "Needs attention, please consult your doctor";
-  };
-
-  const getTrendIcon = () => {
-    if (trend === "up") return <TrendingUp className="h-5 w-5 text-success" />;
-    if (trend === "down")
-      return <TrendingDown className="h-5 w-5 text-destructive" />;
-    return <Minus className="h-5 w-5 text-muted-foreground" />;
-  };
 
   return (
     <MedicalCard elevated className="overflow-hidden">
@@ -53,7 +48,7 @@ export default function HealthScoreCard({ healthScore }: HealthScoreCardProps) {
                 </span>
               </div>
               <div className="absolute -top-2 -right-2 bg-card rounded-full p-2 shadow-md border border-border">
-                {getTrendIcon()}
+                {getTrendIcon(trend)}
               </div>
             </div>
 
@@ -130,4 +125,25 @@ export default function HealthScoreCard({ healthScore }: HealthScoreCardProps) {
       </div>
     </MedicalCard>
   );
+}
+
+function getScoreColor(score: number) {
+  if (score >= 90) return "from-success to-success/80";
+  if (score >= 75) return "from-primary to-primary/80";
+  if (score >= 60) return "from-warning to-warning/80";
+  return "from-destructive to-destructive/80";
+}
+
+function getScoreMessage(score: number) {
+  if (score >= 90) return "Excellent health status";
+  if (score >= 75) return "Good overall health";
+  if (score >= 60) return "Fair health, room for improvement";
+  return "Needs attention, please consult your doctor";
+}
+
+function getTrendIcon(trend: string) {
+  if (trend === "up") return <TrendingUp className="h-5 w-5 text-success" />;
+  if (trend === "down")
+    return <TrendingDown className="h-5 w-5 text-destructive" />;
+  return <Minus className="h-5 w-5 text-muted-foreground" />;
 }

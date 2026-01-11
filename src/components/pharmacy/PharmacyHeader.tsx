@@ -16,31 +16,26 @@ export default function PharmacyHeader({
   const router = useRouter();
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left side */}
           <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => router.back()}
-              className="hover:bg-slate-100"
-            >
+            <Button variant="ghost" size="icon" onClick={() => router.back()}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
 
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">
+              <h1 className="text-2xl font-bold text-foreground">
                 Pharmacy Services
               </h1>
-              <div className="flex items-center gap-3 text-sm text-slate-600">
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
-                  <Pill className="h-4 w-4 text-blue-600" />
+                  <Pill className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                   <span>100+ Medications</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4 text-green-600" />
+                  <Clock className="h-4 w-4 text-green-600 dark:text-green-400" />
                   <span>24-48h Delivery</span>
                 </div>
               </div>
@@ -51,7 +46,7 @@ export default function PharmacyHeader({
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
-              className="relative gap-2"
+              className="relative gap-2 bg-transparent"
               onClick={() => {
                 document
                   .getElementById("cart-summary")
@@ -67,10 +62,7 @@ export default function PharmacyHeader({
               )}
             </Button>
 
-            <Button
-              onClick={onEmergency}
-              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white gap-2"
-            >
+            <Button onClick={onEmergency} variant="destructive" size="sm">
               Emergency
             </Button>
           </div>

@@ -14,7 +14,7 @@ export default function DiagnosticsHeader({
   const router = useRouter();
 
   return (
-    <header className="sticky top-0 z-50 glass border-b border-border">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
@@ -28,7 +28,7 @@ export default function DiagnosticsHeader({
             </Button>
 
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-secondary to-primary rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <Brain className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -45,7 +45,7 @@ export default function DiagnosticsHeader({
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
-              className="gap-2 bg-transparent hidden md:flex"
+              className="gap-2 hidden md:flex bg-transparent"
             >
               <Activity className="h-4 w-4" />
               <span>AI Powered</span>

@@ -88,20 +88,24 @@ export default function EmergencyPage() {
     toast.loading("Alerting emergency services...");
 
     try {
-      const [lat, lng] = location.includes(",")
-        ? location.split(",").map((s) => Number.parseFloat(s.trim()))
-        : [0, 0];
+      const validTypes: Record<string, string> = {
+        medical: "medical_emergency",
+        ambulance: "medical_emergency",
+        fire: "accident",
+        police: "accident",
+      };
+
+      const mappedType = validTypes[emergencyType] || "medical_emergency";
 
       const request: EmergencyRequest = {
-        type: emergencyType as EmergencyRequest["type"],
-        location: {
-          latitude: lat,
-          longitude: lng,
-          address: location,
-        },
-        description: description || "Emergency assistance needed",
-        severity: "critical",
-        contactPhone: user.phone || "",
+        user_id: user.id,
+        type: mappedType as
+          | "heart_attack"
+          | "fall"
+          | "medical_emergency"
+          | "accident"
+          | "breathing_difficulty",
+        location: location,
       };
 
       const response = await emergencyService.createEmergencyRequest(request);
@@ -130,7 +134,7 @@ export default function EmergencyPage() {
       console.error("Emergency trigger error:", err);
       toast.dismiss();
       toast.error("Failed to trigger emergency", {
-        description: "Please call 911 directly",
+        description: "Please call 112 directly (India: 108 for ambulance)",
       });
     } finally {
       setIsTriggering(false);
@@ -176,7 +180,7 @@ export default function EmergencyPage() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe the emergency situation..."
-                  className="w-full min-h-[100px] p-4 rounded-lg border border-border bg-background text-foreground"
+                  className="w-full min-h-[100px] p-4 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
                   maxLength={500}
                 />
               </div>
@@ -188,7 +192,7 @@ export default function EmergencyPage() {
                 disabled={isTriggering || !emergencyType || !location}
                 variant="destructive"
                 size="lg"
-                className="w-full h-16 text-xl font-bold"
+                className="w-full h-16 text-xl font-bold cursor-pointer hover:scale-[1.02] active:scale-[0.98] transition-transform"
               >
                 {isTriggering ? (
                   <span className="flex items-center gap-3">
@@ -200,25 +204,40 @@ export default function EmergencyPage() {
                 )}
               </Button>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mt-8">
-                <div className="p-4 bg-card rounded-lg border border-border">
-                  <div className="text-2xl font-bold text-destructive">911</div>
-                  <div className="text-sm text-muted-foreground mt-1">
-                    Emergency (US)
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center mt-8">
+                <a
+                  href="tel:108"
+                  className="p-4 bg-card rounded-lg border border-border hover:border-primary hover:bg-accent transition-all cursor-pointer group"
+                >
+                  <div className="text-2xl font-bold text-destructive group-hover:scale-110 transition-transform">
+                    108
                   </div>
-                </div>
-                <div className="p-4 bg-card rounded-lg border border-border">
-                  <div className="text-2xl font-bold text-primary">112</div>
                   <div className="text-sm text-muted-foreground mt-1">
-                    Emergency (EU)
+                    Ambulance (India)
                   </div>
-                </div>
-                <div className="p-4 bg-card rounded-lg border border-border">
-                  <div className="text-2xl font-bold text-success">999</div>
+                </a>
+                <a
+                  href="tel:102"
+                  className="p-4 bg-card rounded-lg border border-border hover:border-primary hover:bg-accent transition-all cursor-pointer group"
+                >
+                  <div className="text-2xl font-bold text-primary group-hover:scale-110 transition-transform">
+                    102
+                  </div>
                   <div className="text-sm text-muted-foreground mt-1">
-                    Emergency (UK)
+                    Medical Emergency
                   </div>
-                </div>
+                </a>
+                <a
+                  href="tel:112"
+                  className="p-4 bg-card rounded-lg border border-border hover:border-primary hover:bg-accent transition-all cursor-pointer group"
+                >
+                  <div className="text-2xl font-bold text-success group-hover:scale-110 transition-transform">
+                    112
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-1">
+                    All Emergencies
+                  </div>
+                </a>
               </div>
             </div>
           </>
@@ -242,8 +261,8 @@ export default function EmergencyPage() {
               </h3>
               <ul className="text-sm text-muted-foreground space-y-1">
                 <li>
-                  • For life-threatening emergencies, always call your local
-                  emergency number first
+                  • For life-threatening emergencies, always call 108
+                  (ambulance) or 112 (all emergencies) first
                 </li>
                 <li>
                   • This system complements but does not replace traditional

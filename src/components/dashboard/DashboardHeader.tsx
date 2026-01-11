@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { ArrowLeft, Bell, RefreshCw, User, Menu } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -29,7 +30,7 @@ export default function DashboardHeader({
   };
 
   return (
-    <header className="sticky top-0 z-50 glass border-b border-border">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left side */}
@@ -84,6 +85,8 @@ export default function DashboardHeader({
               <span className="absolute -top-1 -right-1 h-2 w-2 bg-destructive rounded-full" />
               <span className="sr-only">Notifications</span>
             </Button>
+
+            <ThemeToggle />
 
             <Button
               variant="outline"
