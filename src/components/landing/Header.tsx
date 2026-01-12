@@ -1,9 +1,13 @@
-"use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client"
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
+import type React from "react"
+
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useTheme } from "next-themes"
+import { Button } from "@/components/ui/button"
 import {
   Stethoscope,
   Pill,
@@ -15,39 +19,73 @@ import {
   Sparkles,
   Moon,
   Sun,
-} from "lucide-react";
+  LogIn,
+  LogOut,
+  User,
+} from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
+import { authService } from "@/services/auth.service"
+import { toast } from "sonner"
 
 interface NavLinkProps {
-  href: string;
-  children: React.ReactNode;
+  href: string
+  children: React.ReactNode
 }
 
 interface MobileNavLinkProps extends NavLinkProps {
-  onClick?: () => void;
+  onClick?: () => void
 }
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const router = useRouter()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const { theme, setTheme } = useTheme()
 
   const services = [
     { name: "Consultation", icon: Stethoscope, href: "/consultation" },
     { name: "Pharmacy", icon: Pill, href: "/pharmacy" },
     { name: "Diagnostics", icon: Search, href: "/diagnostics" },
-  ];
+  ]
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    const checkAuth = () => {
+      const token = authService.getStoredToken()
+      const storedUser = authService.getStoredUser()
+      setIsAuthenticated(!!token)
+      setUser(storedUser)
+    }
+
+    checkAuth()
+    window.addEventListener("storage", checkAuth)
+    return () => window.removeEventListener("storage", checkAuth)
+  }, [])
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener("scroll", onScroll)
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout()
+      setIsAuthenticated(false)
+      setUser(null)
+      toast.success("Logged out successfully")
+      router.push("/")
+    } catch (error) {
+      toast.error("Logout failed")
+    }
+  }
 
   return (
     <header
@@ -120,6 +158,43 @@ const Header = () => {
               <Moon className="hidden h-5 w-5 text-slate-300 dark:block" />
             </button>
 
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="ml-2 gap-2 rounded-xl cursor-pointer bg-transparent">
+                    <User className="h-4 w-4" />
+                    {user?.name || "User"}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-48 rounded-xl">
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard" className="cursor-pointer">
+                      Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="cursor-pointer">
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                onClick={() => router.push("/login")}
+                variant="outline"
+                className="ml-2 gap-2 rounded-xl cursor-pointer"
+              >
+                <LogIn className="h-4 w-4" />
+                Login
+              </Button>
+            )}
+
             {/* Emergency */}
             <Button className="ml-2 rounded-xl cursor-pointer bg-gradient-to-r from-red-500 to-rose-600 px-6 text-white shadow-lg transition hover:scale-105">
               <Heart className="mr-2 h-4 w-4 animate-pulse" />
@@ -137,10 +212,7 @@ const Header = () => {
               <Moon className="hidden h-5 w-5 text-slate-300 dark:block" />
             </button>
 
-            <button
-              onClick={() => setIsMenuOpen((p) => !p)}
-              className="rounded-xl bg-slate-100 p-2 dark:bg-slate-800"
-            >
+            <button onClick={() => setIsMenuOpen((p) => !p)} className="rounded-xl bg-slate-100 p-2 dark:bg-slate-800">
               {isMenuOpen ? <X /> : <Menu />}
             </button>
           </div>
@@ -153,19 +225,12 @@ const Header = () => {
           }`}
         >
           <div className="pt-4 space-y-2">
-            <MobileNavLink
-              href="/dashboard"
-              onClick={() => setIsMenuOpen(false)}
-            >
+            <MobileNavLink href="/dashboard" onClick={() => setIsMenuOpen(false)}>
               Dashboard
             </MobileNavLink>
 
             {services.map((s) => (
-              <MobileNavLink
-                key={s.name}
-                href={s.href}
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <MobileNavLink key={s.name} href={s.href} onClick={() => setIsMenuOpen(false)}>
                 {s.name}
               </MobileNavLink>
             ))}
@@ -177,12 +242,39 @@ const Header = () => {
             <MobileNavLink href="/iot" onClick={() => setIsMenuOpen(false)}>
               IoT Control
             </MobileNavLink>
+
+            {isAuthenticated ? (
+              <>
+                <div className="px-4 py-2 text-sm text-slate-600 dark:text-slate-400">{user?.name || "User"}</div>
+                <button
+                  onClick={() => {
+                    handleLogout()
+                    setIsMenuOpen(false)
+                  }}
+                  className="w-full text-left block rounded-xl px-4 py-3 font-medium text-destructive transition hover:bg-slate-100 dark:hover:bg-slate-800/50"
+                >
+                  <LogOut className="h-4 w-4 inline mr-2" />
+                  Logout
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => {
+                  router.push("/login")
+                  setIsMenuOpen(false)
+                }}
+                className="w-full text-left block rounded-xl px-4 py-3 font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/50 dark:hover:text-white"
+              >
+                <LogIn className="h-4 w-4 inline mr-2" />
+                Login
+              </button>
+            )}
           </div>
         </div>
       </div>
     </header>
-  );
-};
+  )
+}
 
 const NavLink = ({ href, children }: NavLinkProps) => (
   <Link
@@ -192,7 +284,7 @@ const NavLink = ({ href, children }: NavLinkProps) => (
     {children}
     <span className="absolute bottom-0 left-1/2 h-0.5 w-0 -translate-x-1/2 rounded-full bg-cyan-600 transition-all group-hover:w-3/4 dark:bg-cyan-400" />
   </Link>
-);
+)
 
 const MobileNavLink = ({ href, children, onClick }: MobileNavLinkProps) => (
   <Link
@@ -202,6 +294,6 @@ const MobileNavLink = ({ href, children, onClick }: MobileNavLinkProps) => (
   >
     {children}
   </Link>
-);
+)
 
-export default Header;
+export default Header

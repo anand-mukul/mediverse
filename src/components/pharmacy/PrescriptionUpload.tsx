@@ -1,64 +1,67 @@
-"use client";
+"use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Upload, FileText, CheckCircle, AlertCircle } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+import type React from "react"
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Upload, FileText, CheckCircle, AlertCircle } from "lucide-react"
+import { useState, useRef } from "react"
+import { toast } from "sonner"
 
 interface PrescriptionUploadProps {
-  isUploaded: boolean;
-  onUploadStatusChange: (status: boolean) => void;
+  isUploaded: boolean
+  onUploadStatusChange: (status: boolean) => void
 }
 
-export default function PrescriptionUpload({
-  isUploaded,
-  onUploadStatusChange,
-}: PrescriptionUploadProps) {
-  const [isUploading, setIsUploading] = useState(false);
-  const [fileName, setFileName] = useState("");
+export default function PrescriptionUpload({ isUploaded, onUploadStatusChange }: PrescriptionUploadProps) {
+  const [isUploading, setIsUploading] = useState(false)
+  const [fileName, setFileName] = useState("")
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const file = event.target.files?.[0]
+    if (!file) return
 
-    const validTypes = [
-      "application/pdf",
-      "image/jpeg",
-      "image/png",
-      "image/jpg",
-    ];
+    const validTypes = ["application/pdf", "image/jpeg", "image/png", "image/jpg"]
     if (!validTypes.includes(file.type)) {
       toast.error("Invalid file type", {
         description: "Please upload PDF, JPEG, or PNG files only",
-      });
-      return;
+      })
+      return
     }
 
     if (file.size > 5 * 1024 * 1024) {
       toast.error("File too large", {
         description: "Maximum file size is 5MB",
-      });
-      return;
+      })
+      return
     }
 
-    setIsUploading(true);
-    setFileName(file.name);
+    setIsUploading(true)
+    setFileName(file.name)
 
+    // Simulate upload
     setTimeout(() => {
-      setIsUploading(false);
-      onUploadStatusChange(true);
+      setIsUploading(false)
+      onUploadStatusChange(true)
       toast.success("Prescription uploaded successfully", {
         description: "Our pharmacists will review it within 2 hours",
-      });
-    }, 2000);
-  };
+      })
+    }, 2000)
+  }
 
   const handleRemove = () => {
-    setFileName("");
-    onUploadStatusChange(false);
-    toast.info("Prescription removed");
-  };
+    setFileName("")
+    onUploadStatusChange(false)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
+    toast.info("Prescription removed")
+  }
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click()
+  }
 
   return (
     <Card className="border-0 shadow-lg">
@@ -67,9 +70,7 @@ export default function PrescriptionUpload({
           <FileText className="h-5 w-5 text-primary" />
           Prescription Upload
         </CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Upload your prescription to order prescription medications
-        </p>
+        <p className="text-sm text-muted-foreground">Upload your prescription to order prescription medications</p>
       </CardHeader>
 
       <CardContent>
@@ -79,12 +80,8 @@ export default function PrescriptionUpload({
               <div className="flex items-center gap-3">
                 <CheckCircle className="h-6 w-6 text-success" />
                 <div>
-                  <h4 className="font-semibold text-success">
-                    Prescription Uploaded
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {fileName} • Under review by pharmacists
-                  </p>
+                  <h4 className="font-semibold text-success">Prescription Uploaded</h4>
+                  <p className="text-sm text-muted-foreground">{fileName} • Under review by pharmacists</p>
                 </div>
               </div>
             </div>
@@ -93,20 +90,17 @@ export default function PrescriptionUpload({
               <Button
                 variant="outline"
                 onClick={handleRemove}
-                className="border-destructive/40 text-destructive hover:bg-destructive/10"
+                className="border-destructive/40 text-destructive hover:bg-destructive/10 cursor-pointer bg-transparent"
               >
                 Remove Prescription
               </Button>
 
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button
+                onClick={triggerFileInput}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer"
+              >
                 <Upload className="h-4 w-4 mr-2" />
                 Upload New
-                <input
-                  type="file"
-                  className="hidden"
-                  accept=".pdf,.jpg,.jpeg,.png"
-                  onChange={handleFileUpload}
-                />
               </Button>
             </div>
           </div>
@@ -116,12 +110,8 @@ export default function PrescriptionUpload({
               <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
 
               <div className="mb-4">
-                <h4 className="font-semibold text-foreground mb-2">
-                  Upload Your Prescription
-                </h4>
-                <p className="text-sm text-muted-foreground mb-3">
-                  PDF, JPEG, or PNG files up to 5MB
-                </p>
+                <h4 className="font-semibold text-foreground mb-2">Upload Your Prescription</h4>
+                <p className="text-sm text-muted-foreground mb-3">PDF, JPEG, or PNG files up to 5MB</p>
 
                 <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
                   <AlertCircle className="h-4 w-4" />
@@ -130,7 +120,8 @@ export default function PrescriptionUpload({
               </div>
 
               <Button
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                onClick={triggerFileInput}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground cursor-pointer"
                 disabled={isUploading}
               >
                 {isUploading ? (
@@ -142,21 +133,13 @@ export default function PrescriptionUpload({
                   <>
                     <Upload className="h-4 w-4 mr-2" />
                     Choose File
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      onChange={handleFileUpload}
-                    />
                   </>
                 )}
               </Button>
             </div>
 
             <div className="bg-primary/10 border border-primary/20 rounded-xl p-4">
-              <h5 className="font-semibold text-primary mb-2">
-                Why upload a prescription?
-              </h5>
+              <h5 className="font-semibold text-primary mb-2">Why upload a prescription?</h5>
               <ul className="text-sm text-muted-foreground space-y-1">
                 <li>• Required for prescription medications</li>
                 <li>• Ensures safe and appropriate medication use</li>
@@ -166,7 +149,16 @@ export default function PrescriptionUpload({
             </div>
           </div>
         )}
+
+        {/* Hidden file input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          className="hidden"
+          accept=".pdf,.jpg,.jpeg,.png"
+          onChange={handleFileUpload}
+        />
       </CardContent>
     </Card>
-  );
+  )
 }

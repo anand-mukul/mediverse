@@ -1,19 +1,44 @@
-"use client";
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client"
 
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ShoppingCart, Pill, Clock } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, ShoppingCart, Pill, Clock, LogOut, User } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { authService } from "@/services/auth.service"
+import { toast } from "sonner"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface PharmacyHeaderProps {
-  cartCount: number;
-  onEmergency: () => void;
+  cartCount: number
+  onEmergency: () => void
 }
 
-export default function PharmacyHeader({
-  cartCount,
-  onEmergency,
-}: PharmacyHeaderProps) {
-  const router = useRouter();
+export default function PharmacyHeader({ cartCount, onEmergency }: PharmacyHeaderProps) {
+  const router = useRouter()
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    const storedUser = authService.getStoredUser()
+    setUser(storedUser)
+  }, [])
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout()
+      toast.success("Logged out successfully")
+      router.push("/login")
+    } catch (error) {
+      toast.error("Logout failed")
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
@@ -26,9 +51,7 @@ export default function PharmacyHeader({
             </Button>
 
             <div>
-              <h1 className="text-2xl font-bold text-foreground">
-                Pharmacy Services
-              </h1>
+              <h1 className="text-2xl font-bold text-foreground">Pharmacy Services</h1>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <Pill className="h-4 w-4 text-primary" />
@@ -48,9 +71,7 @@ export default function PharmacyHeader({
               variant="outline"
               className="relative gap-2 bg-transparent cursor-pointer"
               onClick={() => {
-                document
-                  .getElementById("cart-summary")
-                  ?.scrollIntoView({ behavior: "smooth" });
+                document.getElementById("cart-summary")?.scrollIntoView({ behavior: "smooth" })
               }}
             >
               <ShoppingCart className="h-5 w-5" />
@@ -63,6 +84,29 @@ export default function PharmacyHeader({
               )}
             </Button>
 
+            {user && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2 cursor-pointer bg-transparent">
+                    <User className="h-4 w-4" />
+                    {user.name}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-48 rounded-xl" align="end">
+                  <DropdownMenuItem asChild>
+                    <button onClick={() => router.push("/dashboard")} className="w-full cursor-pointer">
+                      Dashboard
+                    </button>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
             <Button onClick={onEmergency} variant="destructive" size="sm" className="cursor-pointer">
               Emergency
             </Button>
@@ -70,5 +114,5 @@ export default function PharmacyHeader({
         </div>
       </div>
     </header>
-  );
+  )
 }
