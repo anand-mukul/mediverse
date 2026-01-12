@@ -140,7 +140,7 @@ const CTASection = () => {
               Free trial. No credit card. Cancel anytime.
             </p>
 
-            <Button className="w-full rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 py-7 text-lg text-white">
+            <Button className="w-full cursor-pointer rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 py-7 text-lg text-white">
               Start Free Trial
             </Button>
           </div>

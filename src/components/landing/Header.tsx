@@ -121,7 +121,7 @@ const Header = () => {
             </button>
 
             {/* Emergency */}
-            <Button className="ml-2 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 px-6 text-white shadow-lg transition hover:scale-105">
+            <Button className="ml-2 rounded-xl cursor-pointer bg-gradient-to-r from-red-500 to-rose-600 px-6 text-white shadow-lg transition hover:scale-105">
               <Heart className="mr-2 h-4 w-4 animate-pulse" />
               Emergency
             </Button>

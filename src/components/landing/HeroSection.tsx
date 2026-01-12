@@ -189,7 +189,7 @@ const HeroSection = () => {
 
         {/* CTA */}
         <div className="mb-20 flex flex-col justify-center gap-4 sm:flex-row">
-          <Button className="rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 px-8 py-7 text-lg text-white shadow-xl transition hover:scale-105">
+          <Button className="rounded-2xl cursor-pointer bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 px-8 py-7 text-lg text-white shadow-xl transition hover:scale-105">
             <Zap className="mr-2 h-5 w-5" />
             Get Started Free
             <ChevronRight className="ml-1 h-5 w-5" />
@@ -197,7 +197,7 @@ const HeroSection = () => {
 
           <Button
             variant="outline"
-            className="rounded-2xl border-cyan-500/50 px-8 py-7 text-lg text-cyan-500 hover:bg-cyan-500/10"
+            className="rounded-2xl cursor-pointer border-cyan-500/50 px-8 py-7 text-lg text-cyan-500 hover:bg-cyan-500/10"
           >
             Schedule a Demo
             <ArrowRight className="ml-2 h-5 w-5" />

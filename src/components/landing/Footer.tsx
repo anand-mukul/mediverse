@@ -92,7 +92,7 @@ const Footer = () => {
               />
               <button
                 aria-label="Subscribe"
-                className="flex h-12 w-12 items-center justify-center bg-gradient-to-r
+                className="flex cursor-pointer h-12 w-12 items-center justify-center bg-gradient-to-r
                            from-cyan-500 to-blue-500 text-white transition hover:opacity-90"
               >
                 <ArrowRight className="h-5 w-5" />
