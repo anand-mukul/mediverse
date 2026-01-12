@@ -132,8 +132,8 @@ export default function ProfilePage() {
           try {
             const response = await fetch(
               `${
-                process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
-              }/api/auth/me`,
+                process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
+              }/auth/me`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -210,7 +210,7 @@ export default function ProfilePage() {
 
       const response = await fetch(
         `${
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
         }/api/auth/profile`,
         {
           method: "PUT",
@@ -265,7 +265,7 @@ export default function ProfilePage() {
 
       const response = await fetch(
         `${
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
         }/api/auth/change-password`,
         {
           method: "POST",

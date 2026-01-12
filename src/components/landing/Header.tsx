@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useTheme } from "next-themes"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
 import {
   Stethoscope,
   Pill,
@@ -22,70 +22,70 @@ import {
   LogIn,
   LogOut,
   User,
-} from "lucide-react"
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
-import { authService } from "@/services/auth.service"
-import { toast } from "sonner"
+} from "@/components/ui/dropdown-menu";
+import { authService } from "@/services/auth.service";
+import { toast } from "sonner";
 
 interface NavLinkProps {
-  href: string
-  children: React.ReactNode
+  href: string;
+  children: React.ReactNode;
 }
 
 interface MobileNavLinkProps extends NavLinkProps {
-  onClick?: () => void
+  onClick?: () => void;
 }
 
 const Header = () => {
-  const router = useRouter()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [user, setUser] = useState<any>(null)
-  const { theme, setTheme } = useTheme()
+  const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const { theme, setTheme } = useTheme();
 
   const services = [
     { name: "Consultation", icon: Stethoscope, href: "/consultation" },
     { name: "Pharmacy", icon: Pill, href: "/pharmacy" },
     { name: "Diagnostics", icon: Search, href: "/diagnostics" },
-  ]
+  ];
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = authService.getStoredToken()
-      const storedUser = authService.getStoredUser()
-      setIsAuthenticated(!!token)
-      setUser(storedUser)
-    }
+      const token = authService.getStoredToken();
+      const storedUser = authService.getStoredUser();
+      setIsAuthenticated(!!token);
+      setUser(storedUser);
+    };
 
-    checkAuth()
-    window.addEventListener("storage", checkAuth)
-    return () => window.removeEventListener("storage", checkAuth)
-  }, [])
+    checkAuth();
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
+  }, []);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener("scroll", onScroll)
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const handleLogout = async () => {
     try {
-      await authService.logout()
-      setIsAuthenticated(false)
-      setUser(null)
-      toast.success("Logged out successfully")
-      router.push("/")
+      await authService.logout();
+      setIsAuthenticated(false);
+      setUser(null);
+      toast.success("Logged out successfully");
+      router.push("/");
     } catch (error) {
-      toast.error("Logout failed")
+      toast.error("Logout failed");
     }
-  }
+  };
 
   return (
     <header
@@ -126,7 +126,7 @@ const Header = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 rounded-xl px-4 py-2 font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/50 dark:hover:text-white">
+                <button className="cursor-pointer flex items-center gap-1 rounded-xl px-4 py-2 font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/50 dark:hover:text-white">
                   Services <ChevronDown className="h-4 w-4" />
                 </button>
               </DropdownMenuTrigger>
@@ -136,7 +136,7 @@ const Header = () => {
                   <DropdownMenuItem key={s.name} asChild>
                     <Link
                       href={s.href}
-                      className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/50 dark:hover:text-white"
+                      className="cursor-pointer flex items-center gap-3 rounded-xl px-4 py-3 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/50 dark:hover:text-white"
                     >
                       <s.icon className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
                       {s.name}
@@ -149,51 +149,94 @@ const Header = () => {
             <NavLink href="/voice">AI Assistant</NavLink>
             <NavLink href="/iot">IoT Control</NavLink>
 
-            {/* Theme Toggle */}
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="ml-2 rounded-xl cursor-pointer bg-slate-100 p-2.5 transition hover:scale-105 dark:bg-slate-800"
-            >
-              <Sun className="h-5 w-5 text-amber-400 dark:hidden" />
-              <Moon className="hidden h-5 w-5 text-slate-300 dark:block" />
-            </button>
-
-            {isAuthenticated ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="ml-2 gap-2 rounded-xl cursor-pointer bg-transparent">
-                    <User className="h-4 w-4" />
-                    {user?.name || "User"}
+            {/* User Actions */}
+            <div className="flex items-center gap-1 sm:gap-2">
+              {isAuthenticated && user ? (
+                <>
+                  {/* User Dropdown */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        className="flex items-center gap-2 rounded-lg px-2 sm:px-3 py-2 text-sm font-medium cursor-pointer
+                        bg-slate-100 text-slate-900 hover:bg-slate-200
+                        dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700
+                        transition-colors duration-200"
+                      >
+                        <User className="h-4 w-4" />
+                        <span className="hidden sm:inline truncate max-w-[120px]">
+                          {user.name}
+                        </span>
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      className="w-48 rounded-lg"
+                      align="end"
+                    >
+                      <DropdownMenuItem asChild>
+                        <Link href="/profile" className="cursor-pointer">
+                          Profile
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/dashboard" className="cursor-pointer">
+                          Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={handleLogout}
+                        className="cursor-pointer text-red-600 dark:text-red-400"
+                      >
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              ) : (
+                <>
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="sm"
+                    className="cursor-pointer hidden sm:flex"
+                  >
+                    <Link href="/login">Sign In</Link>
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-48 rounded-xl">
-                  <DropdownMenuItem asChild>
-                    <Link href="/dashboard" className="cursor-pointer">
-                      Dashboard
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile" className="cursor-pointer">
-                      Profile
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive">
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
+                  <Button asChild size="sm" className="cursor-pointer">
+                    <Link href="/register">Get Started</Link>
+                  </Button>
+                </>
+              )}
+
+              {/* Theme Toggle */}
               <Button
-                onClick={() => router.push("/login")}
-                variant="outline"
-                className="ml-2 gap-2 rounded-xl cursor-pointer"
+                variant="ghost"
+                size="icon"
+                className="cursor-pointer"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               >
-                <LogIn className="h-4 w-4" />
-                Login
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4 text-yellow-500" />
+                ) : (
+                  <Moon className="h-4 w-4 text-slate-700" />
+                )}
               </Button>
-            )}
+
+              {/* Mobile Menu */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden cursor-pointer"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                {isMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
 
             {/* Emergency */}
             <Button className="ml-2 rounded-xl cursor-pointer bg-gradient-to-r from-red-500 to-rose-600 px-6 text-white shadow-lg transition hover:scale-105">
@@ -212,7 +255,10 @@ const Header = () => {
               <Moon className="hidden h-5 w-5 text-slate-300 dark:block" />
             </button>
 
-            <button onClick={() => setIsMenuOpen((p) => !p)} className="rounded-xl bg-slate-100 p-2 dark:bg-slate-800">
+            <button
+              onClick={() => setIsMenuOpen((p) => !p)}
+              className="rounded-xl bg-slate-100 p-2 dark:bg-slate-800"
+            >
               {isMenuOpen ? <X /> : <Menu />}
             </button>
           </div>
@@ -225,12 +271,19 @@ const Header = () => {
           }`}
         >
           <div className="pt-4 space-y-2">
-            <MobileNavLink href="/dashboard" onClick={() => setIsMenuOpen(false)}>
+            <MobileNavLink
+              href="/dashboard"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Dashboard
             </MobileNavLink>
 
             {services.map((s) => (
-              <MobileNavLink key={s.name} href={s.href} onClick={() => setIsMenuOpen(false)}>
+              <MobileNavLink
+                key={s.name}
+                href={s.href}
+                onClick={() => setIsMenuOpen(false)}
+              >
                 {s.name}
               </MobileNavLink>
             ))}
@@ -245,11 +298,13 @@ const Header = () => {
 
             {isAuthenticated ? (
               <>
-                <div className="px-4 py-2 text-sm text-slate-600 dark:text-slate-400">{user?.name || "User"}</div>
+                <div className="px-4 py-2 text-sm text-slate-600 dark:text-slate-400">
+                  {user?.name || "User"}
+                </div>
                 <button
                   onClick={() => {
-                    handleLogout()
-                    setIsMenuOpen(false)
+                    handleLogout();
+                    setIsMenuOpen(false);
                   }}
                   className="w-full text-left block rounded-xl px-4 py-3 font-medium text-destructive transition hover:bg-slate-100 dark:hover:bg-slate-800/50"
                 >
@@ -260,8 +315,8 @@ const Header = () => {
             ) : (
               <button
                 onClick={() => {
-                  router.push("/login")
-                  setIsMenuOpen(false)
+                  router.push("/login");
+                  setIsMenuOpen(false);
                 }}
                 className="w-full text-left block rounded-xl px-4 py-3 font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/50 dark:hover:text-white"
               >
@@ -273,8 +328,8 @@ const Header = () => {
         </div>
       </div>
     </header>
-  )
-}
+  );
+};
 
 const NavLink = ({ href, children }: NavLinkProps) => (
   <Link
@@ -284,7 +339,7 @@ const NavLink = ({ href, children }: NavLinkProps) => (
     {children}
     <span className="absolute bottom-0 left-1/2 h-0.5 w-0 -translate-x-1/2 rounded-full bg-cyan-600 transition-all group-hover:w-3/4 dark:bg-cyan-400" />
   </Link>
-)
+);
 
 const MobileNavLink = ({ href, children, onClick }: MobileNavLinkProps) => (
   <Link
@@ -294,6 +349,6 @@ const MobileNavLink = ({ href, children, onClick }: MobileNavLinkProps) => (
   >
     {children}
   </Link>
-)
+);
 
-export default Header
+export default Header;

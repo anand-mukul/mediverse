@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
 export interface UpdateProfileData {
   name?: string;
@@ -18,7 +18,7 @@ export const profileService = {
   // Get current user profile
   async getCurrentProfile(token: string) {
     try {
-      const response = await fetch(`${API_URL}/api/auth/me`, {
+      const response = await fetch(`${API_URL}/auth/me`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -40,7 +40,7 @@ export const profileService = {
   // Update user profile
   async updateProfile(token: string, data: UpdateProfileData) {
     try {
-      const response = await fetch(`${API_URL}/api/auth/profile`, {
+      const response = await fetch(`${API_URL}/auth/profile`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ export const profileService = {
   // Change password
   async changePassword(token: string, data: ChangePasswordData) {
     try {
-      const response = await fetch(`${API_URL}/api/auth/change-password`, {
+      const response = await fetch(`${API_URL}/auth/change-password`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

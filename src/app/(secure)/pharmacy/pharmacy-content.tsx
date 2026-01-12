@@ -158,14 +158,13 @@ export default function PharmacyPageContent() {
 
     setIsCheckingOut(true);
     try {
-      // Prepare order items
+      // Prepare order items with proper structure
       const orderItems = cart.map((item) => ({
         medicationId: item.medicationId,
         quantity: item.quantity,
         prescriptionId: item.prescriptionApproved ? "approved" : undefined,
       }));
 
-      // Default shipping address (in production, collect from user)
       const shippingAddress = {
         street: "123 Main Street",
         city: "Mumbai",
@@ -174,12 +173,23 @@ export default function PharmacyPageContent() {
         country: "India",
       };
 
-      // Create order
+      const token = authService.getToken();
+      if (!token) {
+        toast.error("Authentication token not found. Please login again.");
+        router.push("/login");
+        return;
+      }
+
+      // Create order with properly structured request
       const order = await pharmacyService.createOrder(
         user.id,
         orderItems,
         shippingAddress
       );
+
+      if (!order || !order.id) {
+        throw new Error("Invalid order response from server");
+      }
 
       toast.success("Order placed successfully!", {
         description: `Order ID: ${order.id}`,
@@ -189,9 +199,31 @@ export default function PharmacyPageContent() {
       clearCart();
       router.push(`/orders/${order.id}`);
     } catch (error: any) {
-      console.error("Checkout failed:", error);
-      toast.error("Checkout failed", {
-        description: error.message || "Please try again",
+      console.error("[v0] Checkout failed:", error);
+
+      let errorMessage = "Checkout failed";
+      let errorDescription = "Please try again";
+
+      if (error.response?.status === 422) {
+        errorMessage = "Invalid request format";
+        errorDescription = "Please check your cart items and address";
+      } else if (error.response?.status === 400) {
+        errorDescription =
+          error.response?.data?.detail ||
+          "Please check your cart and try again";
+      } else if (error.response?.status === 403) {
+        errorMessage = "Not authorized";
+        errorDescription = "Please login again";
+      } else if (error.response?.status === 404) {
+        errorDescription = "One or more items are no longer available";
+      } else if (error.response?.status === 500) {
+        errorDescription = "Server error. Please try again later";
+      } else if (error.message) {
+        errorDescription = error.message;
+      }
+
+      toast.error(errorMessage, {
+        description: errorDescription,
       });
     } finally {
       setIsCheckingOut(false);
