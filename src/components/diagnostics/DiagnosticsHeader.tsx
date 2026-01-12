@@ -21,6 +21,7 @@ export default function DiagnosticsHeader({
             <Button
               variant="ghost"
               size="icon"
+              className="cursor-pointer"
               onClick={() => router.push("/dashboard")}
             >
               <ArrowLeft className="h-5 w-5" />
@@ -45,13 +46,13 @@ export default function DiagnosticsHeader({
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
-              className="gap-2 hidden md:flex bg-transparent"
+              className="gap-2 hidden md:flex bg-transparent cursor-pointer"
             >
               <Activity className="h-4 w-4" />
               <span>AI Powered</span>
             </Button>
 
-            <Button onClick={onEmergency} variant="destructive" size="sm">
+            <Button onClick={onEmergency} variant="destructive" size="sm" className="cursor-pointer">
               <span className="hidden sm:inline">Emergency</span>
               <span className="sm:hidden">SOS</span>
             </Button>

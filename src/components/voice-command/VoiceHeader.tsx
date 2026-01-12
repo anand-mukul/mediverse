@@ -25,8 +25,8 @@ export default function VoiceHeader() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left side */}
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => router.back()}>
+          <div className="flex items-center gap-4 cursor-pointer">
+            <Button variant="ghost" size="icon" onClick={() => router.back()} className="cursor-pointer">
               <ArrowLeft className="h-5 w-5" />
             </Button>
 
@@ -45,7 +45,7 @@ export default function VoiceHeader() {
             <Button
               onClick={handleEmergency}
               variant="destructive"
-              className="gap-2"
+              className="gap-2 cursor-pointer"
             >
               <AlertTriangle className="h-5 w-5" />
               Emergency

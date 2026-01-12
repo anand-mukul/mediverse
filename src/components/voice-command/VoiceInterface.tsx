@@ -42,22 +42,24 @@ export default function VoiceInterface({
   return (
     <div className="space-y-6">
       {/* AI Avatar Card */}
-      <Card className="border-0 shadow-lg overflow-hidden">
+      <Card className="overflow-hidden border-0 shadow-lg">
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-8">
           <div className="flex flex-col items-center text-white">
             <div
-              className={`relative mb-6 ${isListening ? "animate-pulse" : ""}`}
+              className={`relative mb-6 ${
+                isListening ? "animate-pulse" : ""
+              }`}
             >
-              <div className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-4 border-white/30">
-                <Brain className="w-16 h-16 text-white" />
+              <div className="flex h-32 w-32 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30">
+                <Brain className="h-16 w-16" />
               </div>
               {isListening && (
-                <div className="absolute inset-0 rounded-full border-4 border-blue-400 animate-ping opacity-75" />
+                <div className="absolute inset-0 animate-ping rounded-full border-4 border-blue-400 opacity-75" />
               )}
             </div>
 
-            <h2 className="text-3xl font-bold mb-2">MediVerse AI</h2>
-            <p className="text-blue-100 text-lg">
+            <h2 className="mb-2 text-3xl font-bold">MediVerse AI</h2>
+            <p className="text-lg text-blue-100">
               {isListening
                 ? "Listening..."
                 : isProcessing
@@ -68,12 +70,12 @@ export default function VoiceInterface({
         </div>
 
         <CardContent className="p-6">
-          {/* Waveform Visualization */}
+          {/* Waveform */}
           {isListening && (
             <div className="mb-8">
-              <div className="flex items-center gap-2 mb-4">
-                <Volume2 className="h-5 w-5 text-blue-600" />
-                <span className="text-sm font-medium text-slate-700">
+              <div className="mb-4 flex items-center gap-2">
+                <Volume2 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                   Voice Activity: {Math.round(audioLevel)}%
                 </span>
               </div>
@@ -82,20 +84,18 @@ export default function VoiceInterface({
           )}
 
           {/* Voice Button */}
-          <div className="flex flex-col items-center gap-4 mb-8">
+          <div className="mb-8 flex flex-col items-center gap-4">
             <Button
               onClick={onToggleListening}
-              size="lg"
-              className={`
-                w-24 h-24 rounded-full text-white shadow-lg
+              disabled={isProcessing}
+              className={`h-24 w-24 rounded-full text-white shadow-lg
                 ${
                   isListening
                     ? "bg-gradient-to-br from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
                     : "bg-gradient-to-br from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                 }
-                ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}
+                ${isProcessing ? "cursor-not-allowed opacity-50" : ""}
               `}
-              disabled={isProcessing}
             >
               {isListening ? (
                 <MicOff className="h-8 w-8" />
@@ -104,7 +104,7 @@ export default function VoiceInterface({
               )}
             </Button>
 
-            <p className="text-sm text-slate-600 text-center">
+            <p className="text-center text-sm text-slate-600 dark:text-slate-400">
               {isListening
                 ? "Click to stop listening"
                 : "Click to start speaking"}
@@ -114,18 +114,21 @@ export default function VoiceInterface({
           {/* Live Transcript */}
           {transcript && (
             <div className="mb-6">
-              <p className="text-sm font-medium text-slate-700 mb-2">
+              <p className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
                 Live Transcript
               </p>
-              <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                <p className="text-slate-900">{transcript}</p>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4
+                              dark:border-slate-800 dark:bg-slate-900/50">
+                <p className="text-slate-900 dark:text-slate-100">
+                  {transcript}
+                </p>
               </div>
             </div>
           )}
 
           {/* Quick Commands */}
           <div>
-            <p className="text-sm font-medium text-slate-700 mb-3">
+            <p className="mb-3 text-sm font-medium text-slate-700 dark:text-slate-300">
               Try saying:
             </p>
             <div className="flex flex-wrap gap-2">
@@ -162,33 +165,38 @@ export default function VoiceInterface({
         </CardContent>
       </Card>
 
-      {/* Text Input */}
+      {/* Text Input Card */}
       <Card className="border-0 shadow-lg">
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-slate-900 mb-4">
+          <h3 className="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">
             Or type your command
           </h3>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="flex gap-3">
+          <form onSubmit={handleSubmit} className="space-y-3">
+            {/* PERFECT HEIGHT ALIGNMENT */}
+            <div className="flex h-12 gap-3">
               <input
                 type="text"
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
                 placeholder="Type your health query or command..."
-                className="flex-1 bg-white border border-slate-300 rounded-lg px-4 py-3 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-900
+                           placeholder-slate-500 outline-none
+                           focus:ring-2 focus:ring-blue-500
+                           dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               />
               <Button
                 type="submit"
                 disabled={!textInput.trim() || isProcessing}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white gap-2"
+                className="h-12 gap-2 bg-gradient-to-r from-blue-600 to-purple-600
+                           hover:from-blue-700 hover:to-purple-700 text-white"
               >
                 <Send className="h-5 w-5" />
                 Send
               </Button>
             </div>
 
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Press Enter or click Send to process your command
             </p>
           </form>

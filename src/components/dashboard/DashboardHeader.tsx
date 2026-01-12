@@ -39,13 +39,13 @@ export default function DashboardHeader({
               variant="ghost"
               size="icon"
               onClick={() => router.push("/")}
-              className="hidden md:flex"
+              className="hidden md:flex cursor-pointer"
             >
               <ArrowLeft className="h-5 w-5" />
               <span className="sr-only">Go back</span>
             </Button>
 
-            <Button variant="ghost" size="icon" className="md:hidden">
+            <Button variant="ghost" size="icon" className="md:hidden cursor-pointer">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Open menu</span>
             </Button>
@@ -67,7 +67,7 @@ export default function DashboardHeader({
               size="sm"
               onClick={handleRefresh}
               disabled={isRefreshing}
-              className="gap-2 hidden sm:flex bg-transparent"
+              className="gap-2 hidden sm:flex bg-transparent cursor-pointer"
             >
               <RefreshCw
                 className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
@@ -78,7 +78,7 @@ export default function DashboardHeader({
             <Button
               variant="outline"
               size="icon"
-              className="relative bg-transparent"
+              className="relative bg-transparent  cursor-pointer"
               onClick={() => toast.info("Notifications feature coming soon")}
             >
               <Bell className="h-5 w-5" />
@@ -92,7 +92,7 @@ export default function DashboardHeader({
               variant="outline"
               size="icon"
               onClick={() => router.push("/profile")}
-              className="hidden sm:flex"
+              className="hidden sm:flex cursor-pointer"
             >
               <User className="h-5 w-5" />
               <span className="sr-only">Profile</span>
@@ -102,7 +102,7 @@ export default function DashboardHeader({
               onClick={handleEmergency}
               variant="destructive"
               size="sm"
-              className="font-semibold"
+              className="font-semibold cursor-pointer"
             >
               <span className="hidden sm:inline">Emergency</span>
               <span className="sm:hidden">SOS</span>

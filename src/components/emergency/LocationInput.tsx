@@ -1,11 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MapPin, Navigation } from "lucide-react";
 import { toast } from "sonner";
-import { useState } from "react";
 
 interface LocationInputProps {
   location: string;
@@ -27,7 +27,6 @@ export default function LocationInput({
     setIsGettingLocation(true);
     toast.info("Getting your location...");
 
-    // Check for permissions
     navigator.permissions
       ?.query({ name: "geolocation" })
       .then((permissionStatus) => {
@@ -54,7 +53,6 @@ export default function LocationInput({
             setIsGettingLocation(false);
           },
           (error) => {
-            console.error("Geolocation error:", error);
             let errorMessage = "Could not get location";
 
             switch (error.code) {
@@ -80,8 +78,7 @@ export default function LocationInput({
           }
         );
       })
-      .catch((error) => {
-        console.error("Permission check error:", error);
+      .catch(() => {
         toast.error("Failed to check location permissions");
         setIsGettingLocation(false);
       });
@@ -91,32 +88,32 @@ export default function LocationInput({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <MapPin className="h-5 w-5 text-blue-600" />
+          <MapPin className="h-5 w-5 text-blue-600 dark:text-blue-400" />
           Your Location
         </CardTitle>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-600 dark:text-slate-400">
           Share your location for faster emergency response
         </p>
       </CardHeader>
 
       <CardContent className="space-y-4">
+        {/* Input + Button (perfect height alignment) */}
         <div className="flex gap-3">
-          <div className="flex-1">
-            <Input
-              placeholder="Enter address, city, or use GPS"
-              value={location}
-              onChange={(e) => onLocationUpdate(e.target.value)}
-              className="h-12 text-lg"
-            />
-          </div>
+          <Input
+            placeholder="Enter address, city, or use GPS"
+            value={location}
+            onChange={(e) => onLocationUpdate(e.target.value)}
+            className="h-12 text-base"
+          />
 
           <Button
             onClick={getCurrentLocation}
             disabled={isGettingLocation}
-            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white gap-3 px-6"
+            className="h-12 gap-2 px-6 bg-gradient-to-r from-blue-600 to-blue-700
+                       hover:from-blue-700 hover:to-blue-800 text-white"
           >
             {isGettingLocation ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
             ) : (
               <Navigation className="h-5 w-5" />
             )}
@@ -124,18 +121,22 @@ export default function LocationInput({
           </Button>
         </div>
 
+        {/* Saved location */}
         {location && (
-          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
-              📍 Location saved: <span className="font-mono">{location}</span>
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4
+                          dark:border-blue-900 dark:bg-blue-950/40">
+            <p className="text-sm text-blue-800 dark:text-blue-300">
+              Location saved:{" "}
+              <span className="font-mono">{location}</span>
             </p>
           </div>
         )}
 
-        <div className="text-sm text-slate-500">
+        {/* Info */}
+        <div className="text-sm text-slate-500 dark:text-slate-400 space-y-1">
           <p>• Location accuracy improves response time by up to 40%</p>
           <p>• Your location is only shared with emergency responders</p>
-          <p>• GPS works best outdoors with clear sky view</p>
+          <p>• GPS works best outdoors with a clear sky view</p>
         </div>
       </CardContent>
     </Card>

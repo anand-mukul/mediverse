@@ -77,7 +77,7 @@ export default function EmergencyWarningBanner() {
 
           <div className="mt-4 p-3 bg-card border border-destructive/30 rounded-lg">
             <p className="text-sm font-bold text-destructive">
-              ⚠️ For life-threatening emergencies, always call 911 first.
+              ⚠️ For life-threatening emergencies, always call 108 first.
             </p>
           </div>
         </div>

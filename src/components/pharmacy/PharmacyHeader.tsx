@@ -21,7 +21,7 @@ export default function PharmacyHeader({
         <div className="flex items-center justify-between h-16">
           {/* Left side */}
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => router.back()}>
+            <Button variant="ghost" size="icon" className=" cursor-pointer" onClick={() => router.back()}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
 
@@ -46,7 +46,7 @@ export default function PharmacyHeader({
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
-              className="relative gap-2 bg-transparent"
+              className="relative gap-2 bg-transparent cursor-pointer"
               onClick={() => {
                 document
                   .getElementById("cart-summary")
@@ -63,7 +63,7 @@ export default function PharmacyHeader({
               )}
             </Button>
 
-            <Button onClick={onEmergency} variant="destructive" size="sm">
+            <Button onClick={onEmergency} variant="destructive" size="sm" className="cursor-pointer">
               Emergency
             </Button>
           </div>

@@ -34,38 +34,38 @@ export default function ChatHistory({ messages, onClear }: ChatHistoryProps) {
   const getIntentColor = (intent: string) => {
     switch (intent) {
       case "emergency":
-        return "bg-destructive/10 text-destructive border-destructive/20";
+        return "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400";
       case "book_appointment":
-        return "bg-primary/10 text-primary border-primary/20";
+        return "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400";
       case "pharmacy":
-        return "bg-secondary/10 text-secondary-foreground border-secondary/20";
+        return "bg-purple-500/10 text-purple-600 border-purple-500/20 dark:text-purple-400";
       case "iot_command":
-        return "bg-success/10 text-success border-success/20";
+        return "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400";
       default:
-        return "bg-muted text-muted-foreground border-border";
+        return "bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700";
     }
   };
 
   const getUrgencyColor = (urgency: string) => {
     switch (urgency) {
       case "critical":
-        return "bg-destructive text-destructive-foreground";
+        return "bg-red-600 text-white";
       case "high":
-        return "bg-warning text-warning-foreground";
+        return "bg-orange-500 text-white";
       case "medium":
-        return "bg-accent text-accent-foreground";
+        return "bg-amber-400 text-amber-950";
       case "low":
-        return "bg-success text-success-foreground";
+        return "bg-emerald-500 text-white";
       default:
-        return "bg-muted text-muted-foreground";
+        return "bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200";
     }
   };
 
   return (
-    <Card className="h-[600px] flex flex-col border-0 shadow-lg">
-      <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-border">
-        <CardTitle className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5 text-primary" />
+    <Card className="flex h-[600px] flex-col border-0 shadow-lg">
+      <CardHeader className="flex flex-row items-center justify-between border-b border-slate-200 pb-4 dark:border-slate-800">
+        <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+          <MessageSquare className="h-5 w-5 text-blue-600 dark:text-blue-400" />
           Conversation History
         </CardTitle>
 
@@ -74,9 +74,9 @@ export default function ChatHistory({ messages, onClear }: ChatHistoryProps) {
             variant="ghost"
             size="sm"
             onClick={onClear}
-            className="text-muted-foreground hover:text-destructive"
+            className="text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400"
           >
-            <Trash2 className="h-4 w-4 mr-2" />
+            <Trash2 className="mr-2 h-4 w-4" />
             Clear All
           </Button>
         )}
@@ -84,20 +84,20 @@ export default function ChatHistory({ messages, onClear }: ChatHistoryProps) {
 
       <CardContent className="flex-1 overflow-hidden p-0">
         {messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center p-8 text-center">
-            <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center mb-6">
-              <Brain className="h-12 w-12 text-muted-foreground" />
+          <div className="flex h-full flex-col items-center justify-center p-8 text-center">
+            <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+              <Brain className="h-12 w-12 text-slate-400 dark:text-slate-500" />
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">
+            <h3 className="mb-2 text-lg font-semibold text-slate-900 dark:text-slate-100">
               No conversations yet
             </h3>
-            <p className="text-muted-foreground max-w-md">
+            <p className="max-w-md text-slate-600 dark:text-slate-400">
               Start speaking or typing to interact with MediVerse AI. I can help
               with appointments, prescriptions, emergencies, and more.
             </p>
           </div>
         ) : (
-          <div className="h-full overflow-y-auto p-6 space-y-4">
+          <div className="h-full space-y-4 overflow-y-auto p-6">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -106,22 +106,23 @@ export default function ChatHistory({ messages, onClear }: ChatHistoryProps) {
                 }`}
               >
                 {message.type === "ai" && (
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                    <Brain className="h-4 w-4 text-primary-foreground" />
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white">
+                    <Brain className="h-4 w-4" />
                   </div>
                 )}
 
                 <div
-                  className={`max-w-[80%] rounded-2xl p-4 ${
-                    message.type === "user"
-                      ? "bg-primary text-primary-foreground rounded-br-none"
-                      : message.type === "error"
-                      ? "bg-destructive/10 border border-destructive/20 text-destructive rounded-bl-none"
-                      : "bg-muted border border-border text-foreground rounded-bl-none"
-                  }`}
+                  className={`max-w-[80%] rounded-2xl p-4 text-sm
+                    ${
+                      message.type === "user"
+                        ? "rounded-br-none bg-blue-600 text-white"
+                        : message.type === "error"
+                        ? "rounded-bl-none border border-red-500/20 bg-red-500/10 text-red-600 dark:text-red-400"
+                        : "rounded-bl-none border border-slate-200 bg-slate-50 text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
+                    }`}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
+                  <div className="mb-2 flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-xs opacity-80">
                       {message.type === "user" ? (
                         <User className="h-3 w-3" />
                       ) : message.type === "error" ? (
@@ -129,7 +130,7 @@ export default function ChatHistory({ messages, onClear }: ChatHistoryProps) {
                       ) : (
                         <Brain className="h-3 w-3" />
                       )}
-                      <span className="text-xs font-medium opacity-80">
+                      <span className="font-medium">
                         {message.type === "user"
                           ? "You"
                           : message.type === "error"
@@ -137,32 +138,33 @@ export default function ChatHistory({ messages, onClear }: ChatHistoryProps) {
                           : "MediVerse AI"}
                       </span>
                     </div>
+
                     <div className="flex items-center gap-1 text-xs opacity-70">
                       <Clock className="h-3 w-3" />
                       {formatTime(message.timestamp)}
                     </div>
                   </div>
 
-                  <p className="text-sm mb-3">{message.text}</p>
+                  <p className="mb-3 leading-relaxed">{message.text}</p>
 
                   {message.type === "ai" && message.data && (
-                    <div className="space-y-2 mt-3 pt-3 border-t border-border">
+                    <div className="mt-3 space-y-2 border-t border-slate-200 pt-3 dark:border-slate-800">
                       <div className="flex flex-wrap gap-2">
                         <span
-                          className={`text-xs px-2 py-1 rounded-full ${getIntentColor(
+                          className={`rounded-full border px-2 py-1 text-xs ${getIntentColor(
                             message.data.intent
                           )}`}
                         >
                           {message.data.intent.replace("_", " ")}
                         </span>
                         <span
-                          className={`text-xs px-2 py-1 rounded-full ${getUrgencyColor(
+                          className={`rounded-full px-2 py-1 text-xs ${getUrgencyColor(
                             message.data.urgency
                           )}`}
                         >
                           {message.data.urgency}
                         </span>
-                        <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
+                        <span className="rounded-full bg-slate-200 px-2 py-1 text-xs text-slate-700 dark:bg-slate-700 dark:text-slate-200">
                           {Math.round(message.data.confidence * 100)}% confident
                         </span>
                       </div>
@@ -171,8 +173,8 @@ export default function ChatHistory({ messages, onClear }: ChatHistoryProps) {
                 </div>
 
                 {message.type === "user" && (
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-foreground flex items-center justify-center">
-                    <User className="h-4 w-4 text-background" />
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900">
+                    <User className="h-4 w-4" />
                   </div>
                 )}
               </div>

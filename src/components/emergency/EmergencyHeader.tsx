@@ -21,6 +21,7 @@ export default function EmergencyHeader() {
             <Button
               variant="ghost"
               size="icon"
+              className="cursor-pointer"
               onClick={() => router.push("/dashboard")}
             >
               <ArrowLeft className="h-5 w-5" />
@@ -41,7 +42,7 @@ export default function EmergencyHeader() {
             type="button"
             onClick={call108}
             variant="destructive"
-            className="flex items-center gap-2 px-4 md:px-6"
+            className="flex items-center gap-2 px-4 md:px-6 cursor-pointer"
           >
             <Phone className="h-5 w-5" />
             <span className="text-lg font-bold">Call 108</span>

@@ -114,7 +114,7 @@ const Header = () => {
             {/* Theme Toggle */}
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="ml-2 rounded-xl bg-slate-100 p-2.5 transition hover:scale-105 dark:bg-slate-800"
+              className="ml-2 rounded-xl cursor-pointer bg-slate-100 p-2.5 transition hover:scale-105 dark:bg-slate-800"
             >
               <Sun className="h-5 w-5 text-amber-400 dark:hidden" />
               <Moon className="hidden h-5 w-5 text-slate-300 dark:block" />

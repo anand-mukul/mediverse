@@ -15,6 +15,7 @@ export default function ConsultationHeader() {
             <Button
               variant="ghost"
               size="icon"
+              className="cursor-pointer"
               onClick={() => router.push("/dashboard")}
             >
               <ArrowLeft className="h-5 w-5" />
@@ -33,15 +34,15 @@ export default function ConsultationHeader() {
 
           <div className="flex items-center gap-3 md:gap-6">
             <div className="hidden md:flex items-center gap-6">
-              <div className="flex items-center gap-2 text-sm text-foreground">
+              <div className="flex items-center gap-2 text-sm text- cursor-pointer">
                 <Video className="h-4 w-4 text-primary" />
                 <span>Video</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-foreground">
+              <div className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
                 <Phone className="h-4 w-4 text-success" />
                 <span>Phone</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-foreground">
+              <div className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
                 <Users className="h-4 w-4 text-accent-foreground" />
                 <span>In-Person</span>
               </div>
@@ -51,6 +52,7 @@ export default function ConsultationHeader() {
               onClick={() => router.push("/emergency")}
               variant="destructive"
               size="sm"
+              className="cursor-pointer"
             >
               <span className="hidden sm:inline">Emergency</span>
               <span className="sm:hidden">SOS</span>
