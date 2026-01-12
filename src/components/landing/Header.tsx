@@ -131,7 +131,7 @@ const Header = () => {
           <div className="flex md:hidden items-center gap-2">
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="rounded-xl bg-slate-100 p-2 dark:bg-slate-800"
+              className="rounded-xl cursor-pointer bg-slate-100 p-2 dark:bg-slate-800"
             >
               <Sun className="h-5 w-5 text-amber-400 dark:hidden" />
               <Moon className="hidden h-5 w-5 text-slate-300 dark:block" />
