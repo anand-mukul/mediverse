@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Pill, Shield, AlertTriangle, Package, Star } from "lucide-react";
 import type { Medication, CartItem } from "@/types/api";
+import Image from "next/image";
 
 interface MedicationGridProps {
   medications: Medication[];
@@ -58,7 +59,15 @@ export default function MedicationGrid({
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-4">
-                      <div className="text-4xl">{med.imageUrl}</div>
+                      <div className="relative h-16 w-16 shrink-0">
+                        <Image
+                          src={med.imageUrl || "/placeholder-medication.png"}
+                          alt={med.name}
+                          fill
+                          className="object-contain rounded-md"
+                          sizes="64px"
+                        />
+                      </div>
                       <div>
                         <div className="flex items-center gap-2">
                           <h3 className="text-lg font-bold text-foreground">
