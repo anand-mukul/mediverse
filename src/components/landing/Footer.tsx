@@ -1,7 +1,20 @@
-import Link from "next/link";
-import { Facebook, Twitter, Linkedin, Instagram, Heart } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import {
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+  Heart,
+  ArrowRight,
+  Stethoscope,
+} from "lucide-react";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+
   const links = {
     Product: [
       { name: "AI Diagnostics", href: "/diagnostics" },
@@ -37,35 +50,66 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="border-t border-blue-500/20 bg-slate-900/50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+    <footer
+      className="relative overflow-hidden border-t border-slate-200 bg-gradient-to-b from-slate-50 to-white
+                       dark:border-slate-800 dark:from-slate-950 dark:to-slate-900"
+    >
+      <div className="container relative z-10 mx-auto px-6 py-16">
+        <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-6">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                <Heart className="w-5 h-5 text-white" />
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-purple-600">
+                <Stethoscope className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">MediVerse</h3>
-                <p className="text-sm text-slate-400">
+                <h3 className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-2xl font-bold text-transparent">
+                  MediVerse
+                </h3>
+                <p className="text-xs text-slate-600 dark:text-slate-400">
                   Intelligent Healthcare Ecosystem
                 </p>
               </div>
             </div>
-            <p className="text-slate-300 mb-6 max-w-md">
+
+            <p className="mb-6 max-w-md text-slate-600 dark:text-slate-400">
               Transforming healthcare through artificial intelligence and
-              innovative technology for better patient outcomes.
+              innovative technology.
             </p>
-            <div className="flex space-x-4">
-              {socials.map((social) => (
+
+            {/* Newsletter – FIXED UX */}
+            <div
+              className="mb-6 flex h-12 overflow-hidden rounded-xl border border-slate-300 bg-white
+                            focus-within:ring-2 focus-within:ring-cyan-500
+                            dark:border-slate-700 dark:bg-slate-800/50"
+            >
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="flex-1 bg-transparent px-4 text-sm text-slate-900 outline-none
+                           dark:text-white"
+              />
+              <button
+                aria-label="Subscribe"
+                className="flex h-12 w-12 items-center justify-center bg-gradient-to-r
+                           from-cyan-500 to-blue-500 text-white transition hover:opacity-90"
+              >
+                <ArrowRight className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Socials */}
+            <div className="flex gap-3">
+              {socials.map((s) => (
                 <a
-                  key={social.label}
-                  href={social.href}
-                  className="p-2 bg-slate-800/50 rounded-lg hover:bg-blue-500/10 transition-colors"
-                  aria-label={social.label}
+                  key={s.label}
+                  href={s.href}
+                  aria-label={s.label}
+                  className="rounded-xl bg-slate-100 p-3 transition hover:scale-105
+                             dark:bg-slate-800/50"
                 >
-                  <social.icon className="w-5 h-5 text-slate-300 hover:text-blue-400" />
+                  <s.icon className="h-5 w-5 text-slate-700 dark:text-slate-300" />
                 </a>
               ))}
             </div>
@@ -74,41 +118,48 @@ const Footer = () => {
           {/* Links */}
           {Object.entries(links).map(([category, items]) => (
             <div key={category}>
-              <h4 className="text-lg font-semibold text-white mb-4">
+              <h4 className="mb-6 text-lg font-bold text-slate-900 dark:text-slate-100">
                 {category}
               </h4>
               <ul className="space-y-3">
-                {items.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-slate-400 hover:text-blue-400 transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
+                {items.map((item, index) => {
+                  const key = `${category}-${index}`;
+                  return (
+                    <li key={item.name}>
+                      <a
+                        href={item.href}
+                        onMouseEnter={() => setHoveredLink(key)}
+                        onMouseLeave={() => setHoveredLink(null)}
+                        className={`transition
+                          ${
+                            hoveredLink === key
+                              ? "translate-x-2 text-cyan-500"
+                              : "text-slate-600 dark:text-slate-400"
+                          }`}
+                      >
+                        {item.name}
+                      </a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-slate-800/50 mt-12 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-slate-400 text-sm">
-              © {new Date().getFullYear()} MediVerse. All rights reserved.
-            </p>
-            <div className="flex items-center space-x-6">
-              <span className="text-sm text-slate-400 flex items-center">
-                <Heart className="w-4 h-4 text-red-400 mr-2" />
-                Made for better healthcare
-              </span>
-              <span className="text-sm text-green-400 px-3 py-1 bg-green-400/10 rounded-full">
-                HIPAA Compliant
-              </span>
-            </div>
-          </div>
+        {/* Bottom */}
+        <div
+          className="flex flex-col items-center justify-between gap-6 border-t border-slate-200 pt-6
+                        dark:border-slate-800 md:flex-row"
+        >
+          <p className="text-sm text-slate-600 dark:text-slate-400">
+            © {new Date().getFullYear()} MediVerse. All rights reserved.
+          </p>
+
+          <span className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+            <Heart className="h-4 w-4 animate-pulse text-red-500" />
+            Made for better healthcare
+          </span>
         </div>
       </div>
     </footer>

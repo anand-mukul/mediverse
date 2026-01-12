@@ -23,7 +23,7 @@ export default function EmergencyTypeSelector({
     <Card>
       <CardHeader>
         <CardTitle>Select Emergency Type</CardTitle>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-muted-foreground">
           Choose the type of emergency to help responders prepare
         </p>
       </CardHeader>
@@ -36,21 +36,21 @@ export default function EmergencyTypeSelector({
               onClick={() => onSelectType(type.id)}
               className={`
                 flex flex-col items-center justify-center p-6 rounded-2xl
-                border-2 transition-all duration-200
+                border-2 transition-all duration-200 group
                 ${
                   selectedType === type.id
-                    ? `border-red-500 shadow-lg scale-[1.02] ${type.bgColor}`
-                    : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                    ? `border-destructive shadow-lg scale-[1.02] ${type.bgColor}`
+                    : "border-border hover:border-border/60 hover:bg-accent"
                 }
-                group
               `}
             >
               <div className="text-4xl mb-3 transform group-hover:scale-110 transition-transform">
                 {type.icon}
               </div>
+
               <span
                 className={`font-semibold ${
-                  selectedType === type.id ? type.color : "text-slate-800"
+                  selectedType === type.id ? type.color : "text-foreground"
                 }`}
               >
                 {type.label}
@@ -58,7 +58,7 @@ export default function EmergencyTypeSelector({
 
               {selectedType === type.id && (
                 <div className="mt-3">
-                  <div className="w-3 h-3 bg-red-500 rounded-full animate-ping" />
+                  <div className="w-3 h-3 bg-destructive rounded-full animate-ping" />
                 </div>
               )}
             </button>

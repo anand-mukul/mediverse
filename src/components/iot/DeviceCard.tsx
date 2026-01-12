@@ -30,18 +30,18 @@ export default function DeviceCard({
 }: DeviceCardProps) {
   const [showActions, setShowActions] = useState(false);
 
-  const getStatusColor = (status: string) => {
+  const getStatusClasses = (status: string) => {
     switch (status) {
       case "online":
-        return "bg-green-500 text-green-50 dark:bg-green-600 dark:text-green-50";
+        return "bg-success/15 text-success";
       case "offline":
-        return "bg-slate-500 text-slate-50 dark:bg-slate-600 dark:text-slate-50";
+        return "bg-muted text-muted-foreground";
       case "busy":
-        return "bg-yellow-500 text-yellow-50 dark:bg-yellow-600 dark:text-yellow-50";
+        return "bg-warning/15 text-warning";
       case "error":
-        return "bg-red-500 text-red-50 dark:bg-red-600 dark:text-red-50";
+        return "bg-destructive/15 text-destructive";
       default:
-        return "bg-slate-500 text-slate-50 dark:bg-slate-600 dark:text-slate-50";
+        return "bg-muted text-muted-foreground";
     }
   };
 
@@ -62,35 +62,37 @@ export default function DeviceCard({
 
   return (
     <Card
+      onClick={onSelect}
       className={cn(
-        "border-2 cursor-pointer transition-all duration-200 hover:shadow-lg",
-        "dark:bg-card dark:border-border",
+        "cursor-pointer border-2 transition-all duration-200 hover:shadow-lg",
         isSelected
-          ? "border-primary bg-primary/5 dark:bg-primary/10"
+          ? "border-primary bg-primary/5"
           : "border-border hover:border-primary/50"
       )}
-      onClick={onSelect}
     >
       <CardContent className="p-6">
-        {/* Device Header */}
+        {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-4">
             <div className="text-4xl">{getDeviceIcon(device.type)}</div>
+
             <div>
-              <h3 className="text-lg font-bold text-foreground dark:text-foreground">
+              <h3 className="text-lg font-bold text-foreground">
                 {device.name}
               </h3>
+
               <div className="flex items-center gap-2 mt-1">
                 <span
                   className={cn(
                     "text-xs px-2 py-1 rounded-full font-medium",
-                    getStatusColor(device.status)
+                    getStatusClasses(device.status)
                   )}
                 >
                   {device.status.charAt(0).toUpperCase() +
                     device.status.slice(1)}
                 </span>
-                <span className="flex items-center gap-1 text-xs text-muted-foreground dark:text-muted-foreground">
+
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
                   <MapPin className="h-3 w-3" />
                   {device.location}
                 </span>
@@ -106,72 +108,48 @@ export default function DeviceCard({
           />
         </div>
 
-        {/* Device Metrics */}
+        {/* Metrics */}
         <div className="grid grid-cols-4 gap-4 mb-4">
-          <div className="flex items-center gap-2">
-            <Battery className="h-4 w-4 text-green-600 dark:text-green-500" />
-            <div className="text-sm">
-              <div className="font-semibold text-foreground dark:text-foreground">
-                {device.battery}%
-              </div>
-              <div className="text-xs text-muted-foreground dark:text-muted-foreground">
-                Battery
-              </div>
-            </div>
-          </div>
+          <Metric
+            icon={<Battery className="h-4 w-4 text-success" />}
+            value={`${device.battery}%`}
+            label="Battery"
+          />
 
-          <div className="flex items-center gap-2">
-            <Wifi className="h-4 w-4 text-blue-600 dark:text-blue-500" />
-            <div className="text-sm">
-              <div className="font-semibold text-foreground dark:text-foreground">
-                {device.signalStrength}%
-              </div>
-              <div className="text-xs text-muted-foreground dark:text-muted-foreground">
-                Signal
-              </div>
-            </div>
-          </div>
+          <Metric
+            icon={<Wifi className="h-4 w-4 text-primary" />}
+            value={`${device.signalStrength}%`}
+            label="Signal"
+          />
 
-          {device.temperature && (
-            <div className="flex items-center gap-2">
-              <Thermometer className="h-4 w-4 text-orange-600 dark:text-orange-500" />
-              <div className="text-sm">
-                <div className="font-semibold text-foreground dark:text-foreground">
-                  {device.temperature}°C
-                </div>
-                <div className="text-xs text-muted-foreground dark:text-muted-foreground">
-                  Temp
-                </div>
-              </div>
-            </div>
+          {device.temperature !== undefined && (
+            <Metric
+              icon={<Thermometer className="h-4 w-4 text-warning" />}
+              value={`${device.temperature}°C`}
+              label="Temp"
+            />
           )}
 
-          {device.humidity && (
-            <div className="flex items-center gap-2">
-              <Droplets className="h-4 w-4 text-blue-600 dark:text-blue-500" />
-              <div className="text-sm">
-                <div className="font-semibold text-foreground dark:text-foreground">
-                  {device.humidity}%
-                </div>
-                <div className="text-xs text-muted-foreground dark:text-muted-foreground">
-                  Humidity
-                </div>
-              </div>
-            </div>
+          {device.humidity !== undefined && (
+            <Metric
+              icon={<Droplets className="h-4 w-4 text-info" />}
+              value={`${device.humidity}%`}
+              label="Humidity"
+            />
           )}
         </div>
 
         {/* Last Activity */}
-        <div className="mb-4 p-3 bg-accent/50 dark:bg-accent/30 rounded-lg border border-border">
+        <div className="mb-4 p-3 rounded-lg border border-border bg-accent/50">
           <div className="flex items-center gap-2">
-            <Activity className="h-4 w-4 text-muted-foreground dark:text-muted-foreground" />
-            <span className="text-sm text-foreground dark:text-foreground">
+            <Activity className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm text-foreground">
               {device.lastActivity}
             </span>
           </div>
         </div>
 
-        {/* Quick Actions */}
+        {/* Actions */}
         <div className="mt-4 pt-4 border-t border-border">
           <Button
             variant="ghost"
@@ -180,7 +158,7 @@ export default function DeviceCard({
               e.stopPropagation();
               setShowActions(!showActions);
             }}
-            className="w-full justify-between text-foreground dark:text-foreground hover:bg-accent"
+            className="w-full justify-between"
           >
             <span>Quick Actions</span>
             <ChevronRight
@@ -201,7 +179,7 @@ export default function DeviceCard({
                     e.stopPropagation();
                     onSendCommand(action.command, action.label);
                   }}
-                  className={cn(action.color, "text-white hover:opacity-90")}
+                  className="bg-primary text-primary-foreground hover:opacity-90"
                 >
                   <span className="mr-2">{action.icon}</span>
                   {action.label}
@@ -212,5 +190,28 @@ export default function DeviceCard({
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+/* ---------------------------------- */
+/* Small internal helper (no UI change) */
+/* ---------------------------------- */
+function Metric({
+  icon,
+  value,
+  label,
+}: {
+  icon: React.ReactNode;
+  value: string;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      {icon}
+      <div className="text-sm">
+        <div className="font-semibold text-foreground">{value}</div>
+        <div className="text-xs text-muted-foreground">{label}</div>
+      </div>
+    </div>
   );
 }

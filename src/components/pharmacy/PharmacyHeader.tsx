@@ -31,12 +31,12 @@ export default function PharmacyHeader({
               </h1>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
-                  <Pill className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                  <Pill className="h-4 w-4 text-primary" />
                   <span>100+ Medications</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4 text-green-600 dark:text-green-400" />
-                  <span>24-48h Delivery</span>
+                  <Clock className="h-4 w-4 text-success" />
+                  <span>24–48h Delivery</span>
                 </div>
               </div>
             </div>
@@ -55,8 +55,9 @@ export default function PharmacyHeader({
             >
               <ShoppingCart className="h-5 w-5" />
               <span>Cart</span>
+
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-destructive text-destructive-foreground text-xs flex items-center justify-center">
                   {cartCount}
                 </span>
               )}

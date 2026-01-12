@@ -10,8 +10,10 @@ interface DeviceMetricsProps {
 
 export default function DeviceMetrics({ devices }: DeviceMetricsProps) {
   const onlineDevices = devices.filter((d) => d.status === "online").length;
+
   const averageBattery =
     devices.reduce((sum, d) => sum + d.battery, 0) / devices.length;
+
   const averageSignal =
     devices.reduce((sum, d) => sum + d.signalStrength, 0) / devices.length;
 
@@ -21,32 +23,36 @@ export default function DeviceMetrics({ devices }: DeviceMetricsProps) {
       label: "Total Devices",
       value: devices.length.toString(),
       change: "+2 this month",
-      color: "text-blue-600",
-      bgColor: "bg-blue-100",
+      iconBg: "bg-primary/10",
+      iconColor: "text-primary",
+      barColor: "bg-primary",
     },
     {
       icon: Wifi,
       label: "Online Devices",
       value: `${onlineDevices}/${devices.length}`,
       change: "All systems operational",
-      color: "text-green-600",
-      bgColor: "bg-green-100",
+      iconBg: "bg-success/10",
+      iconColor: "text-success",
+      barColor: "bg-success",
     },
     {
       icon: Battery,
       label: "Avg Battery",
       value: `${Math.round(averageBattery)}%`,
       change: "Sufficient for 12h",
-      color: "text-amber-600",
-      bgColor: "bg-amber-100",
+      iconBg: "bg-warning/10",
+      iconColor: "text-warning",
+      barColor: "bg-warning",
     },
     {
       icon: Signal,
       label: "Signal Strength",
       value: `${Math.round(averageSignal)}%`,
       change: "Strong connection",
-      color: "text-purple-600",
-      bgColor: "bg-purple-100",
+      iconBg: "bg-secondary/10",
+      iconColor: "text-secondary",
+      barColor: "bg-secondary",
     },
   ];
 
@@ -55,29 +61,32 @@ export default function DeviceMetrics({ devices }: DeviceMetricsProps) {
       {metrics.map((metric, index) => (
         <Card
           key={index}
-          className="border-0 shadow-sm hover:shadow-md transition-shadow"
+          className="border-border shadow-sm hover:shadow-md transition-shadow"
         >
           <CardContent className="p-6">
             <div className="flex items-start justify-between mb-4">
-              <div className={`p-3 rounded-xl ${metric.bgColor}`}>
-                <metric.icon className={`h-6 w-6 ${metric.color}`} />
+              <div className={`p-3 rounded-xl ${metric.iconBg}`}>
+                <metric.icon className={`h-6 w-6 ${metric.iconColor}`} />
               </div>
+
               <div className="text-right">
-                <div className="text-2xl font-bold text-slate-900">
+                <div className="text-2xl font-bold text-foreground">
                   {metric.value}
                 </div>
-                <div className="text-xs text-slate-500">{metric.change}</div>
+                <div className="text-xs text-muted-foreground">
+                  {metric.change}
+                </div>
               </div>
             </div>
 
             <div className="space-y-2">
-              <h3 className="font-semibold text-slate-900">{metric.label}</h3>
-              <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+              <h3 className="font-semibold text-foreground">
+                {metric.label}
+              </h3>
+
+              <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
                 <div
-                  className={`h-full ${metric.bgColor.replace(
-                    "bg-",
-                    "bg-gradient-to-r from-"
-                  )} to-white`}
+                  className={`h-full ${metric.barColor}`}
                   style={{
                     width: metric.label.includes("Battery")
                       ? `${Math.round(averageBattery)}%`

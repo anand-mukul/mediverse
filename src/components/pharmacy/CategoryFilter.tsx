@@ -36,23 +36,28 @@ export default function CategoryFilter({
   return (
     <div className="overflow-x-auto pb-2">
       <div className="flex gap-2 min-w-max">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => onCategorySelect(category)}
-            className={`
-              flex items-center gap-2 px-4 py-3 rounded-xl transition-all duration-200 whitespace-nowrap
-              ${
-                selectedCategory === category
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
-                  : "bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:shadow-sm"
-              }
-            `}
-          >
-            <span className="text-lg">{getCategoryIcon(category)}</span>
-            <span className="font-medium">{getCategoryLabel(category)}</span>
-          </button>
-        ))}
+        {categories.map((category) => {
+          const isActive = selectedCategory === category;
+
+          return (
+            <button
+              key={category}
+              onClick={() => onCategorySelect(category)}
+              className={`
+                flex items-center gap-2 px-4 py-3 rounded-xl whitespace-nowrap
+                transition-all duration-200
+                ${
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-card text-foreground border border-border hover:bg-accent hover:border-primary/30"
+                }
+              `}
+            >
+              <span className="text-lg">{getCategoryIcon(category)}</span>
+              <span className="font-medium">{getCategoryLabel(category)}</span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

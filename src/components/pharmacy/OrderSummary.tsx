@@ -21,7 +21,7 @@ export default function OrderSummary({
   onCheckout,
 }: OrderSummaryProps) {
   return (
-    <Card className="border-0 shadow-lg bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950">
+    <Card className="border border-border shadow-sm bg-card">
       <CardHeader>
         <CardTitle>Order Summary</CardTitle>
       </CardHeader>
@@ -30,21 +30,19 @@ export default function OrderSummary({
         {/* Cost Breakdown */}
         <div className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-slate-600 dark:text-slate-400">Subtotal</span>
-            <span className="font-medium text-slate-900 dark:text-slate-100">
+            <span className="text-muted-foreground">Subtotal</span>
+            <span className="font-medium text-foreground">
               ₹{totals.subtotal.toFixed(2)}
             </span>
           </div>
 
           <div className="flex justify-between">
-            <span className="text-slate-600 dark:text-slate-400">
-              Delivery Fee
-            </span>
+            <span className="text-muted-foreground">Delivery Fee</span>
             <span
               className={
                 totals.deliveryFee === 0
-                  ? "text-green-600 dark:text-green-400 font-medium"
-                  : "text-slate-900 dark:text-slate-100"
+                  ? "text-success font-medium"
+                  : "text-foreground"
               }
             >
               {totals.deliveryFee === 0
@@ -54,38 +52,36 @@ export default function OrderSummary({
           </div>
 
           <div className="flex justify-between">
-            <span className="text-slate-600 dark:text-slate-400">Tax (8%)</span>
-            <span className="font-medium text-slate-900 dark:text-slate-100">
+            <span className="text-muted-foreground">Tax (8%)</span>
+            <span className="font-medium text-foreground">
               ₹{totals.tax.toFixed(2)}
             </span>
           </div>
 
-          <div className="pt-3 border-t border-slate-200 dark:border-slate-700">
+          <div className="pt-3 border-t border-border">
             <div className="flex justify-between text-lg font-bold">
-              <span className="text-slate-900 dark:text-slate-100">Total</span>
-              <span className="text-blue-600 dark:text-blue-400">
-                ₹{totals.total.toFixed(2)}
-              </span>
+              <span className="text-foreground">Total</span>
+              <span className="text-primary">₹{totals.total.toFixed(2)}</span>
             </div>
           </div>
         </div>
 
         {/* Delivery Info */}
-        <div className="p-4 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-xl">
+        <div className="p-4 bg-primary/10 border border-primary/20 rounded-xl">
           <div className="flex items-center gap-3 mb-3">
-            <Truck className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <Truck className="h-5 w-5 text-primary" />
             <div>
-              <h5 className="font-semibold text-blue-900 dark:text-blue-100">
+              <h5 className="font-semibold text-foreground">
                 Delivery Information
               </h5>
-              <p className="text-sm text-blue-800 dark:text-blue-300">
-                24-48 hour delivery • Trackable • Contactless
+              <p className="text-sm text-muted-foreground">
+                24–48 hour delivery • Trackable • Contactless
               </p>
             </div>
           </div>
 
           {totals.subtotal < 500 && (
-            <div className="text-sm text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950 p-2 rounded-lg">
+            <div className="text-sm text-warning bg-warning/10 p-2 rounded-lg">
               Add ₹{(500 - totals.subtotal).toFixed(2)} more for free delivery!
             </div>
           )}
@@ -93,12 +89,12 @@ export default function OrderSummary({
 
         {/* Security & Benefits */}
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-            <Shield className="h-4 w-4 text-green-600 dark:text-green-400" />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Shield className="h-4 w-4 text-success" />
             <span>Secure payment & HIPAA compliant</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-            <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Clock className="h-4 w-4 text-primary" />
             <span>Pharmacist review for all orders</span>
           </div>
         </div>
@@ -107,11 +103,11 @@ export default function OrderSummary({
         <Button
           onClick={onCheckout}
           disabled={isCheckingOut}
-          className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-6 text-lg gap-3"
+          className="w-full bg-success text-success-foreground hover:bg-success/90 py-6 text-lg gap-3"
         >
           {isCheckingOut ? (
             <>
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-success-foreground border-t-transparent rounded-full animate-spin" />
               Processing Order...
             </>
           ) : (
@@ -124,14 +120,12 @@ export default function OrderSummary({
 
         {/* Payment Methods */}
         <div className="text-center">
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
-            We accept
-          </p>
-          <div className="flex items-center justify-center gap-4">
-            <div className="text-2xl">💳</div>
-            <div className="text-2xl">🏦</div>
-            <div className="text-2xl">📱</div>
-            <div className="text-2xl">🍎</div>
+          <p className="text-xs text-muted-foreground mb-2">We accept</p>
+          <div className="flex items-center justify-center gap-4 text-2xl">
+            <span>💳</span>
+            <span>🏦</span>
+            <span>📱</span>
+            <span>🍎</span>
           </div>
         </div>
       </CardContent>

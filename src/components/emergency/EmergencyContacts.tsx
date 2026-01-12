@@ -58,16 +58,18 @@ export default function EmergencyContacts() {
             <User className="h-5 w-5 text-primary" />
             Emergency Contacts
           </CardTitle>
+
           <Button
             variant="outline"
             size="sm"
             onClick={handleAddContact}
-            className="gap-2 cursor-pointer hover:bg-accent bg-transparent"
+            className="gap-2 bg-transparent hover:bg-accent"
           >
             <Plus className="h-4 w-4" />
             Add Contact
           </Button>
         </div>
+
         <p className="text-sm text-muted-foreground">
           These contacts will be notified immediately during an emergency
         </p>
@@ -81,21 +83,23 @@ export default function EmergencyContacts() {
               className="flex items-center justify-between p-4 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-accent/50 transition-colors"
             >
               <div className="flex items-center gap-4">
+                {/* Avatar */}
                 <div
                   className={`
-                  w-12 h-12 rounded-full flex items-center justify-center text-white
-                  ${
-                    contact.priority === 1
-                      ? "bg-gradient-to-br from-red-500 to-orange-500"
-                      : contact.priority === 2
-                      ? "bg-gradient-to-br from-blue-500 to-cyan-500"
-                      : "bg-gradient-to-br from-purple-500 to-pink-500"
-                  }
-                `}
+                    w-12 h-12 rounded-full flex items-center justify-center text-primary-foreground
+                    ${
+                      contact.priority === 1
+                        ? "bg-gradient-to-br from-destructive to-warning"
+                        : contact.priority === 2
+                        ? "bg-gradient-to-br from-primary to-info"
+                        : "bg-gradient-to-br from-secondary to-accent"
+                    }
+                  `}
                 >
                   <User className="h-6 w-6" />
                 </div>
 
+                {/* Details */}
                 <div>
                   <div className="flex items-center gap-2">
                     <h4 className="font-semibold text-card-foreground">
@@ -119,23 +123,25 @@ export default function EmergencyContacts() {
                 </div>
               </div>
 
+              {/* Right side */}
               <div className="text-right">
                 <div
                   className={`text-xs font-medium px-2 py-1 rounded-full ${
                     contact.priority === 1
-                      ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+                      ? "bg-destructive/15 text-destructive"
                       : contact.priority === 2
-                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
-                      : "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300"
+                      ? "bg-primary/15 text-primary"
+                      : "bg-secondary/20 text-secondary-foreground"
                   }`}
                 >
                   Priority {contact.priority}
                 </div>
+
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleEditContact(contact)}
-                  className="mt-2 text-primary hover:text-primary/80 hover:bg-accent cursor-pointer"
+                  className="mt-2 text-primary hover:bg-accent"
                 >
                   Edit
                 </Button>

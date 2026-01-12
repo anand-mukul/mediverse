@@ -18,28 +18,27 @@ export default function MedicationGrid({
   prescriptionUploaded,
   onAddToCart,
 }: MedicationGridProps) {
-  const isInCart = (medicationId: string) => {
-    return cart.some((item) => item.medicationId === medicationId);
-  };
+  const isInCart = (medicationId: string) =>
+    cart.some((item) => item.medicationId === medicationId);
 
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+        <h2 className="text-2xl font-bold text-foreground">
           Available Medications
         </h2>
-        <div className="text-sm text-slate-600 dark:text-slate-400">
+        <div className="text-sm text-muted-foreground">
           {medications.length} medications found
         </div>
       </div>
 
       {medications.length === 0 ? (
         <div className="text-center py-12">
-          <Pill className="h-16 w-16 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+          <Pill className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-semibold text-foreground mb-2">
             No medications found
           </h3>
-          <p className="text-slate-600 dark:text-slate-400">
+          <p className="text-muted-foreground">
             Try adjusting your search or filter criteria
           </p>
         </div>
@@ -53,7 +52,7 @@ export default function MedicationGrid({
             return (
               <Card
                 key={med.id}
-                className="border-0 shadow-lg hover:shadow-xl transition-shadow"
+                className="border border-border shadow-sm hover:shadow-md transition-shadow"
               >
                 <CardContent className="p-6">
                   {/* Header */}
@@ -62,16 +61,16 @@ export default function MedicationGrid({
                       <div className="text-4xl">{med.imageUrl}</div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                          <h3 className="text-lg font-bold text-foreground">
                             {med.name}
                           </h3>
                           {med.brand && (
-                            <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
+                            <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
                               {med.brand}
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">
+                        <p className="text-sm text-muted-foreground">
                           {med.genericName}
                         </p>
                       </div>
@@ -79,16 +78,16 @@ export default function MedicationGrid({
 
                     <div className="text-right">
                       {med.discountedPrice ? (
-                        <div>
-                          <div className="text-sm text-slate-400 dark:text-slate-500 line-through">
+                        <>
+                          <div className="text-sm line-through text-muted-foreground">
                             ₹{med.price.toFixed(2)}
                           </div>
-                          <div className="text-xl font-bold text-green-600 dark:text-green-400">
+                          <div className="text-xl font-bold text-success">
                             ₹{med.discountedPrice.toFixed(2)}
                           </div>
-                        </div>
+                        </>
                       ) : (
-                        <div className="text-xl font-bold text-slate-900 dark:text-slate-100">
+                        <div className="text-xl font-bold text-foreground">
                           ₹{med.price.toFixed(2)}
                         </div>
                       )}
@@ -96,42 +95,27 @@ export default function MedicationGrid({
                   </div>
 
                   {/* Details */}
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
+                    {[
+                      ["Dosage", med.dosage],
+                      ["Form", med.form],
+                      ["Category", med.category],
+                    ].map(([label, value]) => (
+                      <div key={label}>
+                        <p className="text-muted-foreground">{label}</p>
+                        <p className="font-medium text-foreground">{value}</p>
+                      </div>
+                    ))}
+
                     <div>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">
-                        Dosage
-                      </p>
-                      <p className="font-medium text-slate-900 dark:text-slate-100">
-                        {med.dosage}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">
-                        Form
-                      </p>
-                      <p className="font-medium text-slate-900 dark:text-slate-100">
-                        {med.form}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">
-                        Category
-                      </p>
-                      <p className="font-medium text-slate-900 dark:text-slate-100">
-                        {med.category}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">
-                        Stock
-                      </p>
+                      <p className="text-muted-foreground">Stock</p>
                       <div className="flex items-center gap-2">
-                        <div
+                        <span
                           className={`w-2 h-2 rounded-full ${
-                            med.inStock ? "bg-green-500" : "bg-red-500"
+                            med.inStock ? "bg-success" : "bg-destructive"
                           }`}
                         />
-                        <span className="font-medium text-slate-900 dark:text-slate-100">
+                        <span className="font-medium text-foreground">
                           {med.inStock
                             ? `${med.stockCount} left`
                             : "Out of stock"}
@@ -141,38 +125,32 @@ export default function MedicationGrid({
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm text-slate-700 dark:text-slate-300 mb-4 line-clamp-2">
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                     {med.description}
                   </p>
 
                   {/* Requirements */}
-                  <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center gap-4 mb-4 text-sm font-medium">
                     {med.requiresPrescription && (
-                      <div className="flex items-center gap-2">
-                        <Shield className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                        <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">
-                          Prescription Required
-                        </span>
+                      <div className="flex items-center gap-2 text-primary">
+                        <Shield className="h-4 w-4" />
+                        Prescription Required
                       </div>
                     )}
 
                     {!med.inStock && (
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
-                        <span className="text-sm text-amber-600 dark:text-amber-400 font-medium">
-                          Backorder Available
-                        </span>
+                      <div className="flex items-center gap-2 text-warning">
+                        <AlertTriangle className="h-4 w-4" />
+                        Backorder Available
                       </div>
                     )}
                   </div>
 
-                  {/* Action Buttons */}
+                  {/* Actions */}
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                      <span className="text-sm text-slate-600 dark:text-slate-400">
-                        4.8 (256 reviews)
-                      </span>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Star className="h-4 w-4 fill-warning text-warning" />
+                      4.8 (256 reviews)
                     </div>
 
                     <Button
@@ -181,18 +159,15 @@ export default function MedicationGrid({
                         !med.inStock ||
                         (!canAddToCart && med.requiresPrescription)
                       }
-                      className={`
-                        gap-2
-                        ${
-                          inCart
-                            ? "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
-                            : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                        }
-                      `}
+                      className={
+                        inCart
+                          ? "bg-success text-success-foreground hover:bg-success/90"
+                          : "bg-primary text-primary-foreground hover:bg-primary/90"
+                      }
                     >
                       {inCart ? (
                         <>
-                          <Package className="h-4 w-4" />
+                          <Package className="h-4 w-4 mr-2" />
                           Added to Cart
                         </>
                       ) : (

@@ -22,7 +22,6 @@ export default function PrescriptionUpload({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     const validTypes = [
       "application/pdf",
       "image/jpeg",
@@ -36,7 +35,6 @@ export default function PrescriptionUpload({
       return;
     }
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast.error("File too large", {
         description: "Maximum file size is 5MB",
@@ -47,7 +45,6 @@ export default function PrescriptionUpload({
     setIsUploading(true);
     setFileName(file.name);
 
-    // Simulate upload process
     setTimeout(() => {
       setIsUploading(false);
       onUploadStatusChange(true);
@@ -67,10 +64,10 @@ export default function PrescriptionUpload({
     <Card className="border-0 shadow-lg">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-blue-600" />
+          <FileText className="h-5 w-5 text-primary" />
           Prescription Upload
         </CardTitle>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-muted-foreground">
           Upload your prescription to order prescription medications
         </p>
       </CardHeader>
@@ -78,14 +75,14 @@ export default function PrescriptionUpload({
       <CardContent>
         {isUploaded ? (
           <div className="space-y-4">
-            <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+            <div className="p-4 bg-success/10 border border-success/20 rounded-xl">
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-6 w-6 text-green-600" />
+                <CheckCircle className="h-6 w-6 text-success" />
                 <div>
-                  <h4 className="font-semibold text-green-800">
+                  <h4 className="font-semibold text-success">
                     Prescription Uploaded
                   </h4>
-                  <p className="text-sm text-green-700">
+                  <p className="text-sm text-muted-foreground">
                     {fileName} • Under review by pharmacists
                   </p>
                 </div>
@@ -96,11 +93,12 @@ export default function PrescriptionUpload({
               <Button
                 variant="outline"
                 onClick={handleRemove}
-                className="border-red-300 text-red-600 hover:bg-red-50"
+                className="border-destructive/40 text-destructive hover:bg-destructive/10"
               >
                 Remove Prescription
               </Button>
-              <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white">
+
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
                 <Upload className="h-4 w-4 mr-2" />
                 Upload New
                 <input
@@ -114,30 +112,30 @@ export default function PrescriptionUpload({
           </div>
         ) : (
           <div className="space-y-4">
-            <div className="p-8 border-2 border-dashed border-slate-300 rounded-xl text-center hover:border-blue-400 transition-colors">
-              <Upload className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+            <div className="p-8 border-2 border-dashed border-border rounded-xl text-center hover:border-primary transition-colors">
+              <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
 
               <div className="mb-4">
-                <h4 className="font-semibold text-slate-900 mb-2">
+                <h4 className="font-semibold text-foreground mb-2">
                   Upload Your Prescription
                 </h4>
-                <p className="text-sm text-slate-600 mb-3">
+                <p className="text-sm text-muted-foreground mb-3">
                   PDF, JPEG, or PNG files up to 5MB
                 </p>
 
-                <div className="flex items-center justify-center gap-2 text-xs text-slate-500">
+                <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
                   <AlertCircle className="h-4 w-4" />
                   <span>Prescriptions are reviewed within 2 hours</span>
                 </div>
               </div>
 
               <Button
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 disabled={isUploading}
               >
                 {isUploading ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
                     Uploading...
                   </>
                 ) : (
@@ -155,11 +153,11 @@ export default function PrescriptionUpload({
               </Button>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-              <h5 className="font-semibold text-blue-900 mb-2">
+            <div className="bg-primary/10 border border-primary/20 rounded-xl p-4">
+              <h5 className="font-semibold text-primary mb-2">
                 Why upload a prescription?
               </h5>
-              <ul className="text-sm text-blue-800 space-y-1">
+              <ul className="text-sm text-muted-foreground space-y-1">
                 <li>• Required for prescription medications</li>
                 <li>• Ensures safe and appropriate medication use</li>
                 <li>• Allows pharmacists to review drug interactions</li>

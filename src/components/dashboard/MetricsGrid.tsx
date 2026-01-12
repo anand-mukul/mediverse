@@ -130,8 +130,8 @@ export default function MetricsGrid({ metrics }: MetricsGridProps) {
       unit: "hours",
       status: safeMetrics.sleep_hours >= 7 ? "success" : "warning",
       statusText: safeMetrics.sleep_hours >= 7 ? "Good" : "Low",
-      color: "text-indigo-500",
-      bgColor: "bg-indigo-500/10",
+      color: "text-info",
+      bgColor: "bg-info/10",
     },
   ];
 

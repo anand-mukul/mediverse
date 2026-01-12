@@ -49,31 +49,31 @@ export default function AppointmentCalendar({
   };
 
   return (
-    <Card className="border-0 shadow-lg">
+    <Card>
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <CalendarIcon className="h-5 w-5 text-blue-600" />
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <CalendarIcon className="h-5 w-5 text-primary" />
             Select Date
           </CardTitle>
 
           <div className="flex items-center gap-2">
             <button
               onClick={prevMonth}
-              className="p-2 hover:bg-slate-100 rounded-lg"
+              className="p-2 rounded-lg hover:bg-muted"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-4 w-4 text-foreground" />
             </button>
 
-            <span className="font-semibold text-slate-900">
+            <span className="font-semibold text-foreground">
               {format(currentMonth, "MMMM yyyy")}
             </span>
 
             <button
               onClick={nextMonth}
-              className="p-2 hover:bg-slate-100 rounded-lg"
+              className="p-2 rounded-lg hover:bg-muted"
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4 text-foreground" />
             </button>
           </div>
         </div>
@@ -85,7 +85,7 @@ export default function AppointmentCalendar({
           {daysOfWeek.map((day) => (
             <div
               key={day}
-              className="text-center text-sm font-medium text-slate-500 py-2"
+              className="text-center text-sm font-medium text-muted-foreground py-2"
             >
               {day}
             </div>
@@ -111,25 +111,25 @@ export default function AppointmentCalendar({
                 onClick={() => !isPast && onDateSelect(day)}
                 disabled={isPast}
                 className={`
-                  h-10 rounded-lg flex items-center justify-center text-sm font-medium
+                  h-10 rounded-lg flex items-center justify-center text-sm font-medium relative
                   transition-all duration-200
                   ${
                     isSelected
-                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md"
+                      ? "bg-primary text-primary-foreground shadow-md"
                       : today
-                      ? "bg-blue-100 text-blue-700 border border-blue-200"
+                      ? "bg-accent text-accent-foreground border border-border"
                       : weekend && !isPast
-                      ? "bg-slate-50 text-slate-500"
+                      ? "bg-muted text-muted-foreground"
                       : isPast
-                      ? "bg-slate-100 text-slate-400 cursor-not-allowed"
-                      : "bg-white text-slate-700 hover:bg-slate-100 hover:shadow-sm"
+                      ? "bg-muted/50 text-muted-foreground cursor-not-allowed"
+                      : "bg-background text-foreground hover:bg-muted"
                   }
                   ${!isCurrentMonth ? "opacity-40" : ""}
                 `}
               >
                 {format(day, "d")}
                 {today && !isSelected && (
-                  <div className="absolute bottom-1 w-1 h-1 bg-blue-500 rounded-full" />
+                  <div className="absolute bottom-1 w-1 h-1 bg-primary rounded-full" />
                 )}
               </button>
             );
@@ -137,18 +137,18 @@ export default function AppointmentCalendar({
         </div>
 
         {/* Legend */}
-        <div className="mt-6 pt-4 border-t border-slate-200">
-          <div className="flex items-center justify-center gap-6 text-xs text-slate-600">
+        <div className="mt-6 pt-4 border-t border-border">
+          <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-gradient-to-r from-blue-600 to-purple-600" />
+              <div className="w-3 h-3 rounded bg-primary" />
               <span>Selected</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-blue-100 border border-blue-200" />
+              <div className="w-3 h-3 rounded bg-accent border border-border" />
               <span>Today</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-slate-100" />
+              <div className="w-3 h-3 rounded bg-muted" />
               <span>Unavailable</span>
             </div>
           </div>

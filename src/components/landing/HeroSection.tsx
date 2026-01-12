@@ -1,135 +1,221 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Brain, Stethoscope, Activity, Zap, ChevronRight } from "lucide-react";
+import {
+  Brain,
+  Stethoscope,
+  Activity,
+  Zap,
+  ChevronRight,
+  Sparkles,
+  ArrowRight,
+} from "lucide-react";
+
+type Particle = {
+  left: string;
+  top: string;
+  duration: string;
+  delay: string;
+};
 
 const HeroSection = () => {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const particlesRef = useRef<Particle[]>([]);
+
   const [displayText, setDisplayText] = useState("");
   const [isTyping, setIsTyping] = useState(true);
+  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+  const [isVisible, setIsVisible] = useState(false);
+
   const fullText = "MediVerse";
 
   useEffect(() => {
-    let currentIndex = 0;
-    const typingInterval = setInterval(() => {
-      if (currentIndex <= fullText.length) {
-        setDisplayText(fullText.slice(0, currentIndex));
-        currentIndex++;
+    setIsVisible(true);
+    let index = 0;
+
+    const interval = setInterval(() => {
+      if (index <= fullText.length) {
+        setDisplayText(fullText.slice(0, index));
+        index++;
       } else {
-        clearInterval(typingInterval);
+        clearInterval(interval);
         setIsTyping(false);
       }
     }, 150);
 
-    return () => clearInterval(typingInterval);
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+
+      setMousePosition({
+        x: ((e.clientX - rect.left) / rect.width) * 100,
+        y: ((e.clientY - rect.top) / rect.height) * 100,
+      });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  useEffect(() => {
+    particlesRef.current = Array.from({ length: 20 }).map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      duration: `${5 + Math.random() * 10}s`,
+      delay: `${Math.random() * 5}s`,
+    }));
+  }, []);
+
+  /* ---------------- DATA ---------------- */
 
   const features = [
     {
       icon: Brain,
       title: "AI-Powered Diagnostics",
-      description:
-        "Advanced ML algorithms for accurate preliminary diagnoses and treatment recommendations.",
+      description: "Advanced ML algorithms for accurate preliminary diagnoses.",
+      gradient: "from-cyan-500 to-blue-500",
     },
     {
       icon: Stethoscope,
       title: "Global Health Network",
-      description:
-        "Connect with healthcare professionals worldwide, breaking geographical barriers.",
+      description: "Connect with healthcare professionals worldwide.",
+      gradient: "from-blue-500 to-purple-500",
     },
     {
       icon: Activity,
       title: "Health Intelligence",
-      description:
-        "Comprehensive health tracking and predictive analytics for proactive wellness.",
+      description: "Predictive analytics for proactive wellness.",
+      gradient: "from-purple-500 to-pink-500",
     },
   ];
 
+  const stats = [
+    { value: "98.5%", label: "Diagnostic Accuracy" },
+    { value: "24/7", label: "AI Support" },
+    { value: "50K+", label: "Patients Served" },
+    { value: "1M+", label: "Data Points Analyzed" },
+  ];
+
+  /* ---------------- RENDER ---------------- */
+
   return (
-    <section className="relative py-20 md:py-32">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Typing Animation */}
-          <div className="mb-8">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                {displayText}
-              </span>
-              {isTyping && (
-                <span className="animate-pulse text-blue-400 ml-1">|</span>
-              )}
-            </h1>
-            <p className="text-xl sm:text-2xl text-slate-300 mb-4">
-              Innovate. Evolve. Cure.
-            </p>
-            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-              Where Medical Excellence Meets the Universe of Possibilities
-            </p>
+    <section
+      ref={sectionRef}
+      className="relative min-h-screen overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900"
+    >
+      {/* Mouse-follow glow */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-30"
+        style={{
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%,
+            rgba(6,182,212,0.2),
+            transparent 50%)`,
+        }}
+      />
+
+      {/* Floating particles */}
+      {particlesRef.current.map((p, i) => (
+        <div
+          key={i}
+          className="absolute h-1 w-1 rounded-full bg-cyan-400/30"
+          style={{
+            left: p.left,
+            top: p.top,
+            animation: `float ${p.duration} ease-in-out infinite`,
+            animationDelay: p.delay,
+          }}
+        />
+      ))}
+
+      <div className="container relative z-10 mx-auto max-w-6xl px-6 py-24">
+        {/* Hero text */}
+        <div
+          className={`mb-16 text-center transition-all duration-1000 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
+        >
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 backdrop-blur">
+            <Sparkles className="h-4 w-4 text-cyan-500" />
+            <span className="text-sm font-medium text-cyan-500">
+              AI-Powered Healthcare Platform
+            </span>
           </div>
 
-          {/* Feature Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {features.map((feature, index) => (
+          <h1 className="mb-6 text-6xl font-bold md:text-7xl lg:text-8xl">
+            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+              {displayText}
+            </span>
+            {isTyping && (
+              <span className="ml-1 animate-pulse text-cyan-400">|</span>
+            )}
+          </h1>
+
+          <p className="mb-4 text-3xl font-bold text-slate-800 dark:text-slate-100">
+            Innovate. Evolve. Cure.
+          </p>
+
+          <p className="mx-auto max-w-3xl text-xl text-slate-600 dark:text-slate-400">
+            Where Medical Excellence Meets the Universe of Possibilities
+          </p>
+        </div>
+
+        {/* Features */}
+        <div className="mb-16 grid gap-6 md:grid-cols-3">
+          {features.map((f) => (
+            <div
+              key={f.title}
+              className="group rounded-3xl border border-slate-200 bg-white/70 p-8 backdrop-blur-xl transition-all hover:-translate-y-2 hover:shadow-2xl dark:border-slate-800 dark:bg-slate-900/60"
+            >
               <div
-                key={index}
-                className="group relative p-6 bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 hover:scale-[1.02]"
+                className={`mb-6 inline-flex rounded-2xl bg-gradient-to-br ${f.gradient} p-4`}
               >
-                <div className="mb-4 inline-flex p-3 bg-blue-500/10 rounded-xl">
-                  <feature.icon className="w-8 h-8 text-blue-400" />
-                </div>
-                <h3 className="text-xl font-semibold text-blue-300 mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  {feature.description}
-                </p>
+                <f.icon className="h-8 w-8 text-white" />
               </div>
-            ))}
-          </div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-6 text-lg"
-              asChild
-            >
-              <Link href="/dashboard">
-                <Zap className="w-5 h-5 mr-2" />
-                Get Started Free
-                <ChevronRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-blue-400 text-blue-300 hover:bg-blue-500/10 px-8 py-6 text-lg"
-              asChild
-            >
-              <Link href="/demo">Schedule a Demo</Link>
-            </Button>
-          </div>
+              <h3 className="mb-3 text-xl font-bold text-slate-800 dark:text-slate-100">
+                {f.title}
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400">
+                {f.description}
+              </p>
+            </div>
+          ))}
+        </div>
 
-          {/* Stats */}
-          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">98.5%</div>
-              <div className="text-sm text-slate-400">Diagnostic Accuracy</div>
+        {/* CTA */}
+        <div className="mb-20 flex flex-col justify-center gap-4 sm:flex-row">
+          <Button className="rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 px-8 py-7 text-lg text-white shadow-xl transition hover:scale-105">
+            <Zap className="mr-2 h-5 w-5" />
+            Get Started Free
+            <ChevronRight className="ml-1 h-5 w-5" />
+          </Button>
+
+          <Button
+            variant="outline"
+            className="rounded-2xl border-cyan-500/50 px-8 py-7 text-lg text-cyan-500 hover:bg-cyan-500/10"
+          >
+            Schedule a Demo
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
+          {stats.map((s) => (
+            <div key={s.label}>
+              <div className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-4xl font-bold text-transparent">
+                {s.value}
+              </div>
+              <div className="text-sm text-slate-600 dark:text-slate-400">
+                {s.label}
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">24/7</div>
-              <div className="text-sm text-slate-400">AI Support</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">50K+</div>
-              <div className="text-sm text-slate-400">Patients Served</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">1M+</div>
-              <div className="text-sm text-slate-400">Data Points Analyzed</div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

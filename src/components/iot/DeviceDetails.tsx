@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Battery, Wifi, Thermometer, Droplets, Activity } from "lucide-react";
 import type { IoTDevice } from "@/types/api";
+import { cn } from "@/lib/utils";
 
 interface DeviceDetailsProps {
   device: IoTDevice;
@@ -37,11 +38,26 @@ export default function DeviceDetails({ device }: DeviceDetailsProps) {
     }
   };
 
+  const getStatusDot = () => {
+    switch (device.status) {
+      case "online":
+        return "bg-success";
+      case "offline":
+        return "bg-muted-foreground";
+      case "busy":
+        return "bg-warning";
+      case "error":
+        return "bg-destructive";
+      default:
+        return "bg-muted-foreground";
+    }
+  };
+
   return (
     <Card className="border-0 shadow-lg">
       <CardHeader>
         <CardTitle>Device Details</CardTitle>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-muted-foreground">
           Real-time information and specifications
         </p>
       </CardHeader>
@@ -50,25 +66,19 @@ export default function DeviceDetails({ device }: DeviceDetailsProps) {
         {/* Device Info */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-slate-600">Device ID</div>
-            <div className="font-mono text-sm text-slate-900">{device.id}</div>
+            <div className="text-sm text-muted-foreground">Device ID</div>
+            <div className="font-mono text-sm text-foreground">
+              {device.id}
+            </div>
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="text-sm text-slate-600">Status</div>
+            <div className="text-sm text-muted-foreground">Status</div>
             <div className="flex items-center gap-2">
               <div
-                className={`w-2 h-2 rounded-full ${
-                  device.status === "online"
-                    ? "bg-green-500"
-                    : device.status === "offline"
-                    ? "bg-slate-500"
-                    : device.status === "busy"
-                    ? "bg-yellow-500"
-                    : "bg-red-500"
-                }`}
+                className={cn("w-2 h-2 rounded-full", getStatusDot())}
               />
-              <span className="text-sm font-medium capitalize">
+              <span className="text-sm font-medium capitalize text-foreground">
                 {device.status}
               </span>
             </div>
@@ -77,76 +87,53 @@ export default function DeviceDetails({ device }: DeviceDetailsProps) {
 
         {/* Metrics */}
         <div className="space-y-4">
-          <h4 className="font-semibold text-slate-900">Current Metrics</h4>
+          <h4 className="font-semibold text-foreground">Current Metrics</h4>
 
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Battery className="h-5 w-5 text-green-600" />
-                <span className="text-sm text-slate-700">Battery Level</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-24 h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-green-500 to-emerald-500"
-                    style={{ width: `${device.battery}%` }}
-                  />
-                </div>
-                <span className="text-sm font-medium">{device.battery}%</span>
-              </div>
-            </div>
+          <MetricBar
+            icon={<Battery className="h-5 w-5 text-success" />}
+            label="Battery Level"
+            value={`${device.battery}%`}
+            percent={device.battery}
+          />
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Wifi className="h-5 w-5 text-blue-600" />
-                <span className="text-sm text-slate-700">Signal Strength</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-24 h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
-                    style={{ width: `${device.signalStrength}%` }}
-                  />
-                </div>
-                <span className="text-sm font-medium">
-                  {device.signalStrength}%
-                </span>
-              </div>
-            </div>
+          <MetricBar
+            icon={<Wifi className="h-5 w-5 text-primary" />}
+            label="Signal Strength"
+            value={`${device.signalStrength}%`}
+            percent={device.signalStrength}
+          />
 
-            {device.temperature && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Thermometer className="h-5 w-5 text-orange-600" />
-                  <span className="text-sm text-slate-700">Temperature</span>
-                </div>
-                <span className="text-sm font-medium">
-                  {device.temperature}°C
-                </span>
-              </div>
-            )}
+          {device.temperature !== undefined && (
+            <MetricSimple
+              icon={<Thermometer className="h-5 w-5 text-warning" />}
+              label="Temperature"
+              value={`${device.temperature}°C`}
+            />
+          )}
 
-            {device.humidity && (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Droplets className="h-5 w-5 text-blue-600" />
-                  <span className="text-sm text-slate-700">Humidity</span>
-                </div>
-                <span className="text-sm font-medium">{device.humidity}%</span>
-              </div>
-            )}
-          </div>
+          {device.humidity !== undefined && (
+            <MetricSimple
+              icon={<Droplets className="h-5 w-5 text-info" />}
+              label="Humidity"
+              value={`${device.humidity}%`}
+            />
+          )}
         </div>
 
         {/* Specifications */}
         <div className="space-y-4">
-          <h4 className="font-semibold text-slate-900">Specifications</h4>
+          <h4 className="font-semibold text-foreground">Specifications</h4>
 
           <div className="grid grid-cols-2 gap-3">
             {getDeviceSpecs().map((spec, index) => (
-              <div key={index} className="p-3 bg-slate-50 rounded-lg">
-                <div className="text-xs text-slate-600">{spec.label}</div>
-                <div className="text-sm font-medium text-slate-900">
+              <div
+                key={index}
+                className="p-3 rounded-lg bg-muted/50"
+              >
+                <div className="text-xs text-muted-foreground">
+                  {spec.label}
+                </div>
+                <div className="text-sm font-medium text-foreground">
                   {spec.value}
                 </div>
               </div>
@@ -155,16 +142,71 @@ export default function DeviceDetails({ device }: DeviceDetailsProps) {
         </div>
 
         {/* Last Activity */}
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="p-4 rounded-lg border border-border bg-accent/50">
           <div className="flex items-center gap-3 mb-2">
-            <Activity className="h-5 w-5 text-blue-600" />
-            <span className="text-sm font-medium text-slate-900">
+            <Activity className="h-5 w-5 text-primary" />
+            <span className="text-sm font-medium text-foreground">
               Last Activity
             </span>
           </div>
-          <p className="text-sm text-slate-700">{device.lastActivity}</p>
+          <p className="text-sm text-muted-foreground">
+            {device.lastActivity}
+          </p>
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+/* ---------------- Helpers (no layout change) ---------------- */
+
+function MetricBar({
+  icon,
+  label,
+  value,
+  percent,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  percent: number;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        {icon}
+        <span className="text-sm text-muted-foreground">{label}</span>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+          <div
+            className="h-full bg-primary"
+            style={{ width: `${percent}%` }}
+          />
+        </div>
+        <span className="text-sm font-medium text-foreground">{value}</span>
+      </div>
+    </div>
+  );
+}
+
+function MetricSimple({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        {icon}
+        <span className="text-sm text-muted-foreground">{label}</span>
+      </div>
+      <span className="text-sm font-medium text-foreground">{value}</span>
+    </div>
   );
 }

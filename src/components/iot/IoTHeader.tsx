@@ -57,7 +57,7 @@ export default function IoTHeader({ onRefresh }: IoTHeaderProps) {
 
             <Button
               variant="outline"
-              className="gap-2 border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900"
+              className="gap-2 bg-success/10 text-success border-success/30 hover:bg-success/20"
             >
               <Wifi className="h-4 w-4" />
               Network: Strong

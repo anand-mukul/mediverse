@@ -44,9 +44,9 @@ export default function ShoppingCart({
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
-            <ShoppingCartIcon className="h-5 w-5 text-blue-600" />
+            <ShoppingCartIcon className="h-5 w-5 text-primary" />
             Shopping Cart
-            <span className="text-sm font-normal text-slate-600 ml-2">
+            <span className="text-sm font-normal text-muted-foreground ml-2">
               ({cart.length} items)
             </span>
           </CardTitle>
@@ -56,7 +56,7 @@ export default function ShoppingCart({
               variant="ghost"
               size="sm"
               onClick={onClearCart}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10"
             >
               <Trash2 className="h-4 w-4 mr-2" />
               Clear All
@@ -68,11 +68,11 @@ export default function ShoppingCart({
       <CardContent>
         {cart.length === 0 ? (
           <div className="text-center py-8">
-            <ShoppingCartIcon className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">
+            <ShoppingCartIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               Your cart is empty
             </h3>
-            <p className="text-slate-600">
+            <p className="text-muted-foreground">
               Add medications to get started with your order
             </p>
           </div>
@@ -81,25 +81,27 @@ export default function ShoppingCart({
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="p-4 rounded-xl border border-slate-200 hover:border-blue-200 hover:bg-blue-50/50 transition-colors"
+                className="p-4 rounded-xl border border-border hover:border-primary/50 hover:bg-accent/50 transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h4 className="font-semibold text-slate-900">
+                    <h4 className="font-semibold text-foreground">
                       {item.name}
                     </h4>
-                    <p className="text-sm text-slate-600">{item.dosage}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {item.dosage}
+                    </p>
 
                     {item.requiresPrescription && (
                       <div className="flex items-center gap-2 mt-2">
-                        <Shield className="h-4 w-4 text-blue-600" />
+                        <Shield className="h-4 w-4 text-primary" />
                         <span
                           className={`text-xs font-medium ${
                             item.prescriptionApproved
-                              ? "text-green-600"
+                              ? "text-success"
                               : prescriptionUploaded
-                              ? "text-amber-600"
-                              : "text-red-600"
+                              ? "text-warning"
+                              : "text-destructive"
                           }`}
                         >
                           {item.prescriptionApproved
@@ -113,10 +115,10 @@ export default function ShoppingCart({
                   </div>
 
                   <div className="text-right">
-                    <div className="font-bold text-slate-900">
+                    <div className="font-bold text-foreground">
                       ${(item.price * item.quantity).toFixed(2)}
                     </div>
-                    <div className="text-sm text-slate-600">
+                    <div className="text-sm text-muted-foreground">
                       ${item.price.toFixed(2)} each
                     </div>
                   </div>
@@ -126,18 +128,18 @@ export default function ShoppingCart({
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => onUpdateQuantity(item.id, -1)}
-                      className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors"
+                      className="w-8 h-8 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center transition-colors"
                     >
                       <Minus className="h-3 w-3" />
                     </button>
 
-                    <span className="w-8 text-center font-medium text-slate-900">
+                    <span className="w-8 text-center font-medium text-foreground">
                       {item.quantity}
                     </span>
 
                     <button
                       onClick={() => onUpdateQuantity(item.id, 1)}
-                      className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors"
+                      className="w-8 h-8 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center transition-colors"
                     >
                       <Plus className="h-3 w-3" />
                     </button>
@@ -147,7 +149,7 @@ export default function ShoppingCart({
                     variant="ghost"
                     size="sm"
                     onClick={() => onRemoveItem(item.id)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
                   >
                     Remove
                   </Button>
@@ -156,10 +158,10 @@ export default function ShoppingCart({
             ))}
 
             {/* Subtotal */}
-            <div className="pt-4 border-t border-slate-200">
+            <div className="pt-4 border-t border-border">
               <div className="flex justify-between items-center">
-                <span className="text-slate-700">Subtotal</span>
-                <span className="font-bold text-slate-900">
+                <span className="text-muted-foreground">Subtotal</span>
+                <span className="font-bold text-foreground">
                   ${subtotal.toFixed(2)}
                 </span>
               </div>
@@ -168,10 +170,10 @@ export default function ShoppingCart({
                 (item) =>
                   item.requiresPrescription && !item.prescriptionApproved
               ) && (
-                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <div className="mt-3 p-3 bg-warning/10 border border-warning/20 rounded-lg">
                   <div className="flex items-center gap-2">
-                    <Package className="h-4 w-4 text-amber-600" />
-                    <span className="text-sm text-amber-800 font-medium">
+                    <Package className="h-4 w-4 text-warning" />
+                    <span className="text-sm text-warning font-medium">
                       Prescription review required before checkout
                     </span>
                   </div>

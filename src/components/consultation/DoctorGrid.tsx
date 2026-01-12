@@ -21,10 +21,10 @@ export default function DoctorGrid({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+        <h2 className="text-2xl font-bold text-foreground">
           Available Doctors
         </h2>
-        <div className="text-sm text-slate-600 dark:text-slate-400">
+        <div className="text-sm text-muted-foreground">
           {safeDoctors.length} doctors found
         </div>
       </div>
@@ -37,8 +37,8 @@ export default function DoctorGrid({
               border-2 cursor-pointer transition-all duration-200 hover:shadow-lg
               ${
                 selectedDoctor?.id === doctor.id
-                  ? "border-blue-500 bg-blue-50 dark:bg-blue-950"
-                  : "border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600"
+                  ? "border-primary bg-accent"
+                  : "border-border hover:border-muted-foreground/40"
               }
               ${!doctor.available ? "opacity-70" : ""}
             `}
@@ -52,19 +52,19 @@ export default function DoctorGrid({
                 <div className="flex-1">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                      <h3 className="text-lg font-bold text-foreground">
                         {doctor.name}
                       </h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">
+                      <p className="text-sm text-muted-foreground">
                         {doctor.specialty}
                       </p>
                     </div>
 
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                      <div className="text-2xl font-bold text-foreground">
                         ₹{doctor.consultationFee}
                       </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">
+                      <div className="text-xs text-muted-foreground">
                         Consultation
                       </div>
                     </div>
@@ -73,12 +73,12 @@ export default function DoctorGrid({
                   {/* Rating */}
                   <div className="flex items-center gap-2 mt-2">
                     <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                      <span className="font-semibold text-slate-900 dark:text-slate-100">
+                      <Star className="h-4 w-4 text-warning fill-warning" />
+                      <span className="font-semibold text-foreground">
                         {doctor.rating}
                       </span>
                     </div>
-                    <span className="text-sm text-slate-500 dark:text-slate-400">
+                    <span className="text-sm text-muted-foreground">
                       ({(doctor.reviews ?? 0).toLocaleString()} reviews)
                     </span>
                   </div>
@@ -86,31 +86,31 @@ export default function DoctorGrid({
               </div>
 
               {/* Description */}
-              <p className="text-sm text-slate-700 dark:text-slate-300 mb-4 line-clamp-2">
+              <p className="text-sm text-foreground/80 mb-4 line-clamp-2">
                 {doctor.description}
               </p>
 
               {/* Details */}
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <div className="flex items-center gap-2">
-                  <Award className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                  <Award className="h-4 w-4 text-primary" />
                   <div className="text-sm">
-                    <div className="font-medium text-slate-900 dark:text-slate-100">
+                    <div className="font-medium text-foreground">
                       {doctor.experience} years
                     </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">
+                    <div className="text-xs text-muted-foreground">
                       Experience
                     </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Globe className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  <Globe className="h-4 w-4 text-success" />
                   <div className="text-sm">
-                    <div className="font-medium text-slate-900 dark:text-slate-100">
+                    <div className="font-medium text-foreground">
                       {doctor.languages.length} languages
                     </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">
+                    <div className="text-xs text-muted-foreground">
                       {doctor.languages.join(", ")}
                     </div>
                   </div>
@@ -122,21 +122,21 @@ export default function DoctorGrid({
                 <div className="flex items-center gap-2">
                   <div
                     className={`w-2 h-2 rounded-full ${
-                      doctor.available ? "bg-green-500" : "bg-red-500"
+                      doctor.available ? "bg-success" : "bg-destructive"
                     }`}
                   />
-                  <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                  <span className="text-sm font-medium text-foreground">
                     {doctor.available ? "Available" : "Not Available"}
                   </span>
                 </div>
 
                 {doctor.available ? (
-                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Clock className="h-4 w-4" />
                     <span>Next: {doctor.nextAvailable}</span>
                   </div>
                 ) : (
-                  <div className="text-sm text-slate-500 dark:text-slate-400">
+                  <div className="text-sm text-muted-foreground">
                     Back: {doctor.nextAvailable}
                   </div>
                 )}

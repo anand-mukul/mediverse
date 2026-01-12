@@ -29,41 +29,41 @@ export default function CommandHistory({
   commands,
   onClear,
 }: CommandHistoryProps) {
-  const formatTime = (date: Date) => {
-    return format(date, "HH:mm");
-  };
+  const formatTime = (date: Date) => format(date, "HH:mm");
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: CommandLog["status"]) => {
     switch (status) {
       case "success":
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-success" />;
       case "error":
-        return <XCircle className="h-4 w-4 text-red-500" />;
+        return <XCircle className="h-4 w-4 text-destructive" />;
       case "pending":
-        return <Clock4 className="h-4 w-4 text-amber-500 animate-spin" />;
+        return (
+          <Clock4 className="h-4 w-4 text-warning animate-spin" />
+        );
       default:
-        return <Clock className="h-4 w-4 text-slate-500" />;
+        return <Clock className="h-4 w-4 text-muted-foreground" />;
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: CommandLog["status"]) => {
     switch (status) {
       case "success":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-success/10 text-success border-success/20";
       case "error":
-        return "bg-red-100 text-red-800 border-red-200";
+        return "bg-destructive/10 text-destructive border-destructive/20";
       case "pending":
-        return "bg-amber-100 text-amber-800 border-amber-200";
+        return "bg-warning/10 text-warning border-warning/20";
       default:
-        return "bg-slate-100 text-slate-800 border-slate-200";
+        return "bg-muted text-muted-foreground border-border";
     }
   };
 
   return (
-    <Card className="border-0 shadow-lg">
+    <Card className="shadow-lg">
       <CardHeader className="flex flex-row items-center justify-between pb-4">
-        <CardTitle className="flex items-center gap-2">
-          <History className="h-5 w-5 text-blue-600" />
+        <CardTitle className="flex items-center gap-2 text-foreground">
+          <History className="h-5 w-5 text-primary" />
           Command History
         </CardTitle>
 
@@ -72,7 +72,7 @@ export default function CommandHistory({
             variant="ghost"
             size="sm"
             onClick={onClear}
-            className="text-slate-500 hover:text-red-600"
+            className="text-muted-foreground hover:text-destructive"
           >
             <Trash2 className="h-4 w-4 mr-2" />
             Clear All
@@ -83,11 +83,11 @@ export default function CommandHistory({
       <CardContent>
         {commands.length === 0 ? (
           <div className="text-center py-8">
-            <History className="h-12 w-12 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">
+            <History className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               No commands yet
             </h3>
-            <p className="text-slate-600">
+            <p className="text-muted-foreground">
               Send commands to your IoT devices to see history here
             </p>
           </div>
@@ -96,19 +96,24 @@ export default function CommandHistory({
             {commands.map((cmd) => (
               <div
                 key={cmd.id}
-                className="p-4 rounded-xl border border-slate-200 hover:border-blue-200 hover:bg-blue-50/50 transition-colors"
+                className="p-4 rounded-xl border border-border bg-card
+                           hover:border-primary/40 hover:bg-accent/40
+                           transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
                     {getStatusIcon(cmd.status)}
                     <div>
-                      <h4 className="font-semibold text-slate-900">
+                      <h4 className="font-semibold text-foreground">
                         {cmd.deviceName}
                       </h4>
-                      <p className="text-sm text-slate-600">{cmd.command}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {cmd.command}
+                      </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-slate-500">
+
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Clock className="h-3 w-3" />
                     {formatTime(cmd.timestamp)}
                   </div>
@@ -116,15 +121,16 @@ export default function CommandHistory({
 
                 <div className="flex items-center justify-between">
                   <span
-                    className={`text-xs px-2 py-1 rounded-full ${getStatusColor(
+                    className={`text-xs px-2 py-1 rounded-full border ${getStatusColor(
                       cmd.status
                     )}`}
                   >
-                    {cmd.status.charAt(0).toUpperCase() + cmd.status.slice(1)}
+                    {cmd.status.charAt(0).toUpperCase() +
+                      cmd.status.slice(1)}
                   </span>
 
                   {cmd.response && (
-                    <p className="text-xs text-slate-600 truncate max-w-[200px]">
+                    <p className="text-xs text-muted-foreground truncate max-w-[200px]">
                       {cmd.response}
                     </p>
                   )}

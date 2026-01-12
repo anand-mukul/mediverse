@@ -19,8 +19,11 @@ export default function DeviceGrid({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-slate-900">Connected Devices</h2>
-        <div className="text-sm text-slate-600">
+        <h2 className="text-2xl font-bold text-foreground">
+          Connected Devices
+        </h2>
+
+        <div className="text-sm text-muted-foreground">
           {devices.length} devices •{" "}
           {devices.filter((d) => d.status === "online").length} online
         </div>

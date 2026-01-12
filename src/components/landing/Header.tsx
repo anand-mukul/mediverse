@@ -1,10 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { Stethoscope, Pill, Search, ChevronDown, Menu, X } from "lucide-react";
+import {
+  Stethoscope,
+  Pill,
+  Search,
+  ChevronDown,
+  Menu,
+  X,
+  Heart,
+  Sparkles,
+  Moon,
+  Sun,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +23,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+interface NavLinkProps {
+  href: string;
+  children: React.ReactNode;
+}
+
+interface MobileNavLinkProps extends NavLinkProps {
+  onClick?: () => void;
+}
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   const services = [
     { name: "Consultation", icon: Stethoscope, href: "/consultation" },
@@ -21,156 +43,165 @@ const Header = () => {
     { name: "Diagnostics", icon: Search, href: "/diagnostics" },
   ];
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border backdrop-blur-md bg-background/95 shadow-sm">
+    <header
+      className={`fixed top-0 z-50 w-full backdrop-blur-xl transition-all duration-500
+        ${
+          scrolled
+            ? "bg-white/80 border-b border-slate-200 shadow-lg shadow-cyan-500/10 dark:bg-slate-900/80 dark:border-slate-800 dark:shadow-cyan-500/5"
+            : "bg-transparent border-transparent"
+        }
+      `}
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg" />
-              <div className="absolute inset-[2px] bg-background rounded flex items-center justify-center">
-                <Stethoscope className="w-5 h-5 text-blue-400" />
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative h-12 w-12">
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 opacity-0 blur-lg transition group-hover:opacity-100" />
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-500 via-blue-600 to-purple-700" />
+              <div className="absolute inset-[2px] flex items-center justify-center rounded-lg bg-white dark:bg-slate-900">
+                <Stethoscope className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
               </div>
             </div>
+
             <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
                 MediVerse
               </h1>
-              <p className="text-xs text-muted-foreground">
+              <p className="flex items-center gap-1 text-xs font-medium text-slate-600 dark:text-slate-400">
+                <Sparkles className="h-3 w-3" />
                 Intelligent Healthcare
               </p>
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link
-              href="/dashboard"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium"
-            >
-              Dashboard
-            </Link>
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-2">
+            <NavLink href="/dashboard">Dashboard</NavLink>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="text-foreground/80 hover:text-primary hover:bg-primary/10"
-                >
-                  Services
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
+                <button className="flex items-center gap-1 rounded-xl px-4 py-2 font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/50 dark:hover:text-white">
+                  Services <ChevronDown className="h-4 w-4" />
+                </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-48 bg-background/95 backdrop-blur-md border border-border">
-                {services.map((service) => (
-                  <DropdownMenuItem key={service.name} asChild>
+
+              <DropdownMenuContent className="w-56 rounded-2xl border border-slate-200 bg-white/95 p-2 backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/95">
+                {services.map((s) => (
+                  <DropdownMenuItem key={s.name} asChild>
                     <Link
-                      href={service.href}
-                      className="flex items-center space-x-3 cursor-pointer"
+                      href={s.href}
+                      className="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/50 dark:hover:text-white"
                     >
-                      <service.icon className="w-4 h-4 text-primary" />
-                      <span>{service.name}</span>
+                      <s.icon className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
+                      {s.name}
                     </Link>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Link
-              href="/voice"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium"
+            <NavLink href="/voice">AI Assistant</NavLink>
+            <NavLink href="/iot">IoT Control</NavLink>
+
+            {/* Theme Toggle */}
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="ml-2 rounded-xl bg-slate-100 p-2.5 transition hover:scale-105 dark:bg-slate-800"
             >
-              AI Assistant
-            </Link>
+              <Sun className="h-5 w-5 text-amber-400 dark:hidden" />
+              <Moon className="hidden h-5 w-5 text-slate-300 dark:block" />
+            </button>
 
-            <Link
-              href="/iot"
-              className="text-foreground/80 hover:text-primary transition-colors font-medium"
-            >
-              IoT Control
-            </Link>
-
-            <ThemeToggle />
-
-            <Button variant="destructive" size="sm" className="ml-4">
+            {/* Emergency */}
+            <Button className="ml-2 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 px-6 text-white shadow-lg transition hover:scale-105">
+              <Heart className="mr-2 h-4 w-4 animate-pulse" />
               Emergency
             </Button>
           </nav>
 
-          {/* Mobile menu button */}
-          <div className="flex items-center gap-2 md:hidden">
-            <ThemeToggle />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+          {/* Mobile Controls */}
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="rounded-xl bg-slate-100 p-2 dark:bg-slate-800"
             >
-              {isMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
+              <Sun className="h-5 w-5 text-amber-400 dark:hidden" />
+              <Moon className="hidden h-5 w-5 text-slate-300 dark:block" />
+            </button>
+
+            <button
+              onClick={() => setIsMenuOpen((p) => !p)}
+              className="rounded-xl bg-slate-100 p-2 dark:bg-slate-800"
+            >
+              {isMenuOpen ? <X /> : <Menu />}
+            </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border mt-2">
-            <div className="flex flex-col space-y-3">
-              <Link
-                href="/dashboard"
-                className="text-foreground/80 hover:text-primary px-4 py-2 rounded-lg hover:bg-primary/10"
+        {/* Mobile Menu */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-500 ${
+            isMenuOpen ? "max-h-[600px] opacity-100 pb-6" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="pt-4 space-y-2">
+            <MobileNavLink
+              href="/dashboard"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Dashboard
+            </MobileNavLink>
+
+            {services.map((s) => (
+              <MobileNavLink
+                key={s.name}
+                href={s.href}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Dashboard
-              </Link>
-              <div className="px-4 py-2">
-                <p className="text-sm font-medium text-muted-foreground mb-2">
-                  Services
-                </p>
-                <div className="space-y-2">
-                  {services.map((service) => (
-                    <Link
-                      key={service.name}
-                      href={service.href}
-                      className="flex items-center space-x-3 text-foreground/80 hover:text-primary px-4 py-2 rounded-lg hover:bg-primary/10"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <service.icon className="w-4 h-4" />
-                      <span>{service.name}</span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <Link
-                href="/voice"
-                className="text-foreground/80 hover:text-primary px-4 py-2 rounded-lg hover:bg-primary/10"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                AI Assistant
-              </Link>
-              <Link
-                href="/iot"
-                className="text-foreground/80 hover:text-primary px-4 py-2 rounded-lg hover:bg-primary/10"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                IoT Control
-              </Link>
-              <Button
-                variant="destructive"
-                className="mt-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Emergency
-              </Button>
-            </div>
+                {s.name}
+              </MobileNavLink>
+            ))}
+
+            <MobileNavLink href="/voice" onClick={() => setIsMenuOpen(false)}>
+              AI Assistant
+            </MobileNavLink>
+
+            <MobileNavLink href="/iot" onClick={() => setIsMenuOpen(false)}>
+              IoT Control
+            </MobileNavLink>
           </div>
-        )}
+        </div>
       </div>
     </header>
   );
 };
+
+const NavLink = ({ href, children }: NavLinkProps) => (
+  <Link
+    href={href}
+    className="group relative rounded-xl px-4 py-2 font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+  >
+    {children}
+    <span className="absolute bottom-0 left-1/2 h-0.5 w-0 -translate-x-1/2 rounded-full bg-cyan-600 transition-all group-hover:w-3/4 dark:bg-cyan-400" />
+  </Link>
+);
+
+const MobileNavLink = ({ href, children, onClick }: MobileNavLinkProps) => (
+  <Link
+    href={href}
+    onClick={onClick}
+    className="block rounded-xl px-4 py-3 font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/50 dark:hover:text-white"
+  >
+    {children}
+  </Link>
+);
 
 export default Header;

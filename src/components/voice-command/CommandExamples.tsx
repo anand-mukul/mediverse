@@ -70,10 +70,10 @@ export default function CommandExamples({
     <Card className="mt-8 border-0 shadow-lg">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Mic className="h-5 w-5 text-blue-600" />
+          <Mic className="h-5 w-5 text-primary" />
           Try These Commands
         </CardTitle>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-muted-foreground">
           Click any command to try it out
         </p>
       </CardHeader>
@@ -83,10 +83,10 @@ export default function CommandExamples({
           {examples.map((category) => (
             <div key={category.category} className="space-y-3">
               <div className="flex items-center gap-2">
-                <div className="p-2 bg-slate-100 rounded-lg">
-                  <category.icon className="h-4 w-4 text-blue-600" />
+                <div className="p-2 bg-muted rounded-lg">
+                  <category.icon className="h-4 w-4 text-primary" />
                 </div>
-                <h4 className="font-semibold text-slate-900">
+                <h4 className="font-semibold text-foreground">
                   {category.category}
                 </h4>
               </div>
@@ -96,7 +96,7 @@ export default function CommandExamples({
                   <Button
                     key={index}
                     variant="outline"
-                    className="w-full justify-start text-left h-auto py-2 px-3 text-sm hover:bg-slate-50 hover:border-blue-300"
+                    className="w-full justify-start text-left h-auto py-2 px-3 text-sm hover:bg-accent hover:border-primary/40"
                     onClick={() => onSelectExample(command)}
                   >
                     {command}

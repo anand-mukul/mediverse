@@ -38,11 +38,11 @@ export default function ConsultationHeader() {
                 <span>Video</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-foreground">
-                <Phone className="h-4 w-4 text-green-600 dark:text-green-400" />
+                <Phone className="h-4 w-4 text-success" />
                 <span>Phone</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-foreground">
-                <Users className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                <Users className="h-4 w-4 text-accent-foreground" />
                 <span>In-Person</span>
               </div>
             </div>
