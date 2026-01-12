@@ -197,7 +197,7 @@ export default function DiagnosticsPage() {
         });
       }
     } catch (error) {
-      console.error("[v0] Analysis error:", error);
+      console.error("Analysis error:", error);
       toast.dismiss();
       toast.error("Analysis failed", {
         description:

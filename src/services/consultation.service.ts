@@ -23,7 +23,7 @@ export const consultationService = {
     const response = await apiClient.get<Doctor[]>(endpoint);
 
     if (!response || !Array.isArray(response)) {
-      console.error("[v0] Invalid doctors response:", response);
+      console.error("Invalid doctors response:", response);
       return [];
     }
 

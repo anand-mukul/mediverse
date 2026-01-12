@@ -95,7 +95,7 @@ export default function LoginForm() {
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isLoading ? "Signing in..." : "Sign In"}
           </Button>

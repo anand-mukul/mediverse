@@ -166,7 +166,7 @@ export default function ConsultationPage() {
         router.push("/dashboard");
       }, 2000);
     } catch (err) {
-      console.error("[v0] Booking error:", err);
+      console.error("Booking error:", err);
       const errorMessage =
         err instanceof Error ? err.message : "Failed to book appointment";
       toast.error("Booking failed", {

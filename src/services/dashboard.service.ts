@@ -34,7 +34,7 @@ export const dashboardService = {
         recentActivity: data.recentActivity || [],
       };
     } catch (error) {
-      console.error("[v0] Dashboard data fetch error:", error);
+      console.error("Dashboard data fetch error:", error);
       throw error;
     }
   },
@@ -46,7 +46,7 @@ export const dashboardService = {
       );
       return metrics;
     } catch (error) {
-      console.error("[v0] Health metrics fetch error:", error);
+      console.error("Health metrics fetch error:", error);
       // Return default metrics on error
       return {
         heart_rate: 72,
@@ -64,7 +64,7 @@ export const dashboardService = {
       const score = await apiClient.get<HealthScore>(`/health/score/${userId}`);
       return score;
     } catch (error) {
-      console.error("[v0] Health score fetch error:", error);
+      console.error("Health score fetch error:", error);
       // Return default score on error
       return {
         score: 85,
@@ -83,7 +83,7 @@ export const dashboardService = {
     try {
       await apiClient.post(`/health/sync/${userId}`);
     } catch (error) {
-      console.error("[v0] Health sync error:", error);
+      console.error("Health sync error:", error);
       throw error;
     }
   },

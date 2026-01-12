@@ -58,7 +58,7 @@ export default function PharmacyPageContent() {
       )
       setMedications(Array.isArray(data) ? data : [])
     } catch (error) {
-      console.error("[v0] Failed to load medications:", error)
+      console.error("Failed to load medications:", error)
       toast.error("Failed to load medications")
       setMedications([])
     } finally {
@@ -177,7 +177,7 @@ export default function PharmacyPageContent() {
       clearCart()
       router.push(`/orders/${order.id}`)
     } catch (error: any) {
-      console.error("[v0] Checkout failed:", error)
+      console.error("Checkout failed:", error)
       toast.error("Checkout failed", {
         description: error.message || "Please try again",
       })

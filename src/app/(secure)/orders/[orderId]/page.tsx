@@ -25,7 +25,7 @@ export default function OrderDetailsPage() {
         const orderData = await pharmacyService.trackOrder(orderId)
         setOrder(orderData)
       } catch (error) {
-        console.error("[v0] Failed to load order:", error)
+        console.error("Failed to load order:", error)
         toast.error("Failed to load order details")
       } finally {
         setLoading(false)
