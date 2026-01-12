@@ -168,11 +168,11 @@ export default function MedicationGrid({
                         !med.inStock ||
                         (!canAddToCart && med.requiresPrescription)
                       }
-                      className={
+                      className={`cursor-pointer ${
                         inCart
                           ? "bg-success text-success-foreground hover:bg-success/90"
                           : "bg-primary text-primary-foreground hover:bg-primary/90"
-                      }
+                      }`}
                     >
                       {inCart ? (
                         <>

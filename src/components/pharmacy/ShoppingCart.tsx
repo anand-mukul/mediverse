@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -56,7 +58,7 @@ export default function ShoppingCart({
               variant="ghost"
               size="sm"
               onClick={onClearCart}
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer"
             >
               <Trash2 className="h-4 w-4 mr-2" />
               Clear All
@@ -116,10 +118,10 @@ export default function ShoppingCart({
 
                   <div className="text-right">
                     <div className="font-bold text-foreground">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ₹{(item.price * item.quantity).toFixed(2)}
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      ${item.price.toFixed(2)} each
+                      ₹{item.price.toFixed(2)} each
                     </div>
                   </div>
                 </div>
@@ -128,7 +130,7 @@ export default function ShoppingCart({
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => onUpdateQuantity(item.id, -1)}
-                      className="w-8 h-8 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center transition-colors"
+                      className="w-8 h-8 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center transition-colors cursor-pointer"
                     >
                       <Minus className="h-3 w-3" />
                     </button>
@@ -139,7 +141,7 @@ export default function ShoppingCart({
 
                     <button
                       onClick={() => onUpdateQuantity(item.id, 1)}
-                      className="w-8 h-8 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center transition-colors"
+                      className="w-8 h-8 rounded-full bg-muted hover:bg-muted/70 flex items-center justify-center transition-colors cursor-pointer"
                     >
                       <Plus className="h-3 w-3" />
                     </button>
@@ -149,7 +151,7 @@ export default function ShoppingCart({
                     variant="ghost"
                     size="sm"
                     onClick={() => onRemoveItem(item.id)}
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10 cursor-pointer"
                   >
                     Remove
                   </Button>
@@ -162,7 +164,7 @@ export default function ShoppingCart({
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="font-bold text-foreground">
-                  ${subtotal.toFixed(2)}
+                  ₹{subtotal.toFixed(2)}
                 </span>
               </div>
 

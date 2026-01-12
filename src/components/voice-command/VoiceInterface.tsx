@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mic, MicOff, Brain, Send, Volume2 } from "lucide-react";
@@ -46,9 +48,7 @@ export default function VoiceInterface({
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-8">
           <div className="flex flex-col items-center text-white">
             <div
-              className={`relative mb-6 ${
-                isListening ? "animate-pulse" : ""
-              }`}
+              className={`relative mb-6 ${isListening ? "animate-pulse" : ""}`}
             >
               <div className="flex h-32 w-32 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30">
                 <Brain className="h-16 w-16" />
@@ -88,7 +88,7 @@ export default function VoiceInterface({
             <Button
               onClick={onToggleListening}
               disabled={isProcessing}
-              className={`h-24 w-24 rounded-full text-white shadow-lg
+              className={`h-24 w-24 rounded-full text-white shadow-lg cursor-pointer
                 ${
                   isListening
                     ? "bg-gradient-to-br from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
@@ -117,8 +117,10 @@ export default function VoiceInterface({
               <p className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
                 Live Transcript
               </p>
-              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4
-                              dark:border-slate-800 dark:bg-slate-900/50">
+              <div
+                className="rounded-lg border border-slate-200 bg-slate-50 p-4
+                              dark:border-slate-800 dark:bg-slate-900/50"
+              >
                 <p className="text-slate-900 dark:text-slate-100">
                   {transcript}
                 </p>
@@ -140,7 +142,7 @@ export default function VoiceInterface({
                     "I need an appointment with a cardiologist"
                   )
                 }
-                className="text-xs"
+                className="text-xs cursor-pointer"
               >
                 Book appointment
               </Button>
@@ -148,7 +150,7 @@ export default function VoiceInterface({
                 variant="outline"
                 size="sm"
                 onClick={() => handleQuickCommand("I have chest pain")}
-                className="text-xs"
+                className="text-xs cursor-pointer"
               >
                 Check symptoms
               </Button>
@@ -156,7 +158,7 @@ export default function VoiceInterface({
                 variant="outline"
                 size="sm"
                 onClick={() => handleQuickCommand("Refill my prescription")}
-                className="text-xs"
+                className="text-xs cursor-pointer"
               >
                 Refill medicine
               </Button>
@@ -173,7 +175,6 @@ export default function VoiceInterface({
           </h3>
 
           <form onSubmit={handleSubmit} className="space-y-3">
-            {/* PERFECT HEIGHT ALIGNMENT */}
             <div className="flex h-12 gap-3">
               <input
                 type="text"
@@ -189,7 +190,7 @@ export default function VoiceInterface({
                 type="submit"
                 disabled={!textInput.trim() || isProcessing}
                 className="h-12 gap-2 bg-gradient-to-r from-blue-600 to-purple-600
-                           hover:from-blue-700 hover:to-purple-700 text-white"
+                           hover:from-blue-700 hover:to-purple-700 text-white cursor-pointer"
               >
                 <Send className="h-5 w-5" />
                 Send

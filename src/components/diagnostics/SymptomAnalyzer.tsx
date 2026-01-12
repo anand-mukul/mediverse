@@ -48,12 +48,12 @@ export default function SymptomAnalyzer({
             <Brain className="h-5 w-5 text-blue-600" />
             Symptom Analyzer
           </CardTitle>
-          <div className="flex items-center gap-2 text-sm text-slate-600">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Clock className="h-4 w-4" />
             <span>Analysis takes 10-15 seconds</span>
           </div>
         </div>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-muted-foreground">
           Describe your symptoms in detail for AI-powered preliminary assessment
         </p>
       </CardHeader>
@@ -61,7 +61,7 @@ export default function SymptomAnalyzer({
       <CardContent className="space-y-6">
         {/* Quick Symptoms */}
         <div>
-          <h4 className="font-semibold text-slate-900 mb-3">
+          <h4 className="font-semibold text-foreground mb-3">
             Quick Symptom Selector
           </h4>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -69,15 +69,15 @@ export default function SymptomAnalyzer({
               <button
                 key={symptom.id}
                 onClick={() => onQuickSymptomSelect(symptom)}
-                className="flex flex-col items-center p-4 rounded-xl border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 transition-all duration-200 group"
+                className="flex flex-col items-center p-4 rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-200 group cursor-pointer"
               >
                 <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">
                   {symptom.icon}
                 </span>
-                <span className="font-medium text-slate-900 text-sm text-center">
+                <span className="font-medium text-foreground text-sm text-center">
                   {symptom.label}
                 </span>
-                <span className="text-xs text-slate-500 mt-1 text-center">
+                <span className="text-xs text-muted-foreground mt-1 text-center">
                   {symptom.description}
                 </span>
               </button>
@@ -88,10 +88,10 @@ export default function SymptomAnalyzer({
         {/* Symptom Input */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h4 className="font-semibold text-slate-900">
+            <h4 className="font-semibold text-foreground">
               Describe Your Symptoms
             </h4>
-            <span className="text-sm text-slate-500">
+            <span className="text-sm text-muted-foreground">
               {symptoms.length}/1000 characters
             </span>
           </div>
@@ -100,11 +100,11 @@ export default function SymptomAnalyzer({
             value={symptoms}
             onChange={(e) => onSymptomsChange(e.target.value)}
             placeholder="Be specific about: What symptoms? How long? Severity? Any triggers or patterns?"
-            className="min-h-[200px] text-lg border-slate-300 focus:border-blue-500 focus:ring-blue-500"
+            className="min-h-[200px] text-lg border-border focus:border-primary focus:ring-primary"
             maxLength={1000}
           />
 
-          <div className="flex items-center gap-2 mt-2 text-sm text-slate-600">
+          <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
             <AlertCircle className="h-4 w-4" />
             <span>
               Include duration, severity, location, and any associated symptoms
@@ -114,7 +114,7 @@ export default function SymptomAnalyzer({
 
         {/* Example Symptoms */}
         <div>
-          <h4 className="font-semibold text-slate-900 mb-3">
+          <h4 className="font-semibold text-foreground mb-3">
             Example Descriptions
           </h4>
           <div className="space-y-2">
@@ -122,9 +122,9 @@ export default function SymptomAnalyzer({
               <button
                 key={index}
                 onClick={() => handleExampleClick(example)}
-                className="w-full text-left p-3 rounded-lg bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:border-slate-300 transition-colors text-sm text-slate-700"
+                className="w-full text-left p-3 rounded-lg bg-muted border border-border hover:bg-muted/80 hover:border-primary transition-colors text-sm text-foreground cursor-pointer"
               >
-                <MessageSquare className="h-3 w-3 inline mr-2 text-slate-500" />
+                <MessageSquare className="h-3 w-3 inline mr-2 text-muted-foreground" />
                 {example}
               </button>
             ))}
@@ -135,7 +135,7 @@ export default function SymptomAnalyzer({
         <Button
           onClick={onAnalyze}
           disabled={isAnalyzing || symptoms.trim().length < 10}
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-6 text-lg gap-3"
+          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-6 text-lg gap-3 cursor-pointer"
         >
           {isAnalyzing ? (
             <>
@@ -151,20 +151,24 @@ export default function SymptomAnalyzer({
         </Button>
 
         {/* Features */}
-        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-200">
+        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600">98.5%</div>
-            <div className="text-xs text-slate-600">Accuracy Rate</div>
+            <div className="text-xs text-muted-foreground">Accuracy Rate</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">50K+</div>
-            <div className="text-xs text-slate-600">Analyses Performed</div>
+            <div className="text-xs text-muted-foreground">
+              Analyses Performed
+            </div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600">
               <Zap className="h-6 w-6 inline" />
             </div>
-            <div className="text-xs text-slate-600">Real-time Processing</div>
+            <div className="text-xs text-muted-foreground">
+              Real-time Processing
+            </div>
           </div>
         </div>
       </CardContent>

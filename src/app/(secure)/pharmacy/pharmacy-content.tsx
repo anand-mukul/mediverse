@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+"use client";
 
-import { useState, useEffect, useCallback } from "react"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner"
-import PharmacyHeader from "@/components/pharmacy/PharmacyHeader"
-import SearchBar from "@/components/pharmacy/SearchBar"
-import CategoryFilter from "@/components/pharmacy/CategoryFilter"
-import MedicationGrid from "@/components/pharmacy/MedicationGrid"
-import ShoppingCart from "@/components/pharmacy/ShoppingCart"
-import PrescriptionUpload from "@/components/pharmacy/PrescriptionUpload"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { Button } from "@/components/ui/button"
-import { pharmacyService } from "@/services/pharmacy.service"
-import { authService } from "@/services/auth.service"
-import type { Medication } from "@/types/api"
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import PharmacyHeader from "@/components/pharmacy/PharmacyHeader";
+import SearchBar from "@/components/pharmacy/SearchBar";
+import CategoryFilter from "@/components/pharmacy/CategoryFilter";
+import MedicationGrid from "@/components/pharmacy/MedicationGrid";
+import ShoppingCart from "@/components/pharmacy/ShoppingCart";
+import PrescriptionUpload from "@/components/pharmacy/PrescriptionUpload";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { Button } from "@/components/ui/button";
+import { pharmacyService } from "@/services/pharmacy.service";
+import { authService } from "@/services/auth.service";
+import type { Medication } from "@/types/api";
 
 const CATEGORIES = [
   "all",
@@ -26,63 +26,69 @@ const CATEGORIES = [
   "cholesterol",
   "allergy",
   "vitamins",
-]
+];
 
 interface CartItemExtended {
-  id: string
-  name: string
-  dosage: string
-  price: number
-  quantity: number
-  requiresPrescription: boolean
-  prescriptionApproved?: boolean
-  medicationId: string
+  id: string;
+  name: string;
+  dosage: string;
+  price: number;
+  quantity: number;
+  requiresPrescription: boolean;
+  prescriptionApproved?: boolean;
+  medicationId: string;
 }
 
 export default function PharmacyPageContent() {
-  const router = useRouter()
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [medications, setMedications] = useState<Medication[]>([])
-  const [cart, setCart] = useState<CartItemExtended[]>([])
-  const [loading, setLoading] = useState(true)
-  const [prescriptionUploaded, setPrescriptionUploaded] = useState(false)
-  const [isCheckingOut, setIsCheckingOut] = useState(false)
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [medications, setMedications] = useState<Medication[]>([]);
+  const [cart, setCart] = useState<CartItemExtended[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [prescriptionUploaded, setPrescriptionUploaded] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const fetchMedications = useCallback(async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const data = await pharmacyService.getMedications(
         selectedCategory === "all" ? undefined : selectedCategory,
-        searchQuery || undefined,
-      )
-      setMedications(Array.isArray(data) ? data : [])
+        searchQuery || undefined
+      );
+      setMedications(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error("Failed to load medications:", error)
-      toast.error("Failed to load medications")
-      setMedications([])
+      console.error("Failed to load medications:", error);
+      toast.error("Failed to load medications");
+      setMedications([]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [selectedCategory, searchQuery])
+  }, [selectedCategory, searchQuery]);
 
   useEffect(() => {
-    fetchMedications()
-  }, [fetchMedications])
+    fetchMedications();
+  }, [fetchMedications]);
 
   const addToCart = (medication: Medication) => {
     if (!medication.inStock) {
-      toast.error("Out of stock")
-      return
+      toast.error("Out of stock");
+      return;
     }
 
-    const existingItem = cart.find((item) => item.medicationId === medication.id)
+    const existingItem = cart.find(
+      (item) => item.medicationId === medication.id
+    );
 
     if (existingItem) {
       setCart(
-        cart.map((item) => (item.medicationId === medication.id ? { ...item, quantity: item.quantity + 1 } : item)),
-      )
-      toast.success("Quantity updated")
+        cart.map((item) =>
+          item.medicationId === medication.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+      toast.success("Quantity updated");
     } else {
       const newItem: CartItemExtended = {
         id: medication.id,
@@ -93,69 +99,71 @@ export default function PharmacyPageContent() {
         quantity: 1,
         requiresPrescription: medication.requiresPrescription,
         prescriptionApproved: false,
-      }
-      setCart([...cart, newItem])
-      toast.success("Added to cart")
+      };
+      setCart([...cart, newItem]);
+      toast.success("Added to cart");
     }
-  }
+  };
 
   const removeFromCart = (itemId: string) => {
-    setCart(cart.filter((item) => item.id !== itemId))
-    toast.info("Removed from cart")
-  }
+    setCart(cart.filter((item) => item.id !== itemId));
+    toast.info("Removed from cart");
+  };
 
   const updateQuantity = (itemId: string, delta: number) => {
     setCart(
       cart
         .map((item) => {
           if (item.id === itemId) {
-            const newQuantity = item.quantity + delta
-            return { ...item, quantity: Math.max(1, newQuantity) }
+            const newQuantity = item.quantity + delta;
+            return { ...item, quantity: Math.max(1, newQuantity) };
           }
-          return item
+          return item;
         })
-        .filter((item) => item.quantity > 0),
-    )
-  }
+        .filter((item) => item.quantity > 0)
+    );
+  };
 
   const clearCart = () => {
-    setCart([])
-    toast.info("Cart cleared")
-  }
+    setCart([]);
+    toast.info("Cart cleared");
+  };
 
   const handleEmergency = () => {
-    router.push("/emergency")
-  }
+    router.push("/emergency");
+  };
 
   const handleCheckout = async () => {
-    const user = authService.getStoredUser()
+    const user = authService.getStoredUser();
     if (!user) {
-      toast.error("Please login to checkout")
-      router.push("/login")
-      return
+      toast.error("Please login to checkout");
+      router.push("/login");
+      return;
     }
 
     // Check if any items require prescription
-    const requiresPrescription = cart.some((item) => item.requiresPrescription && !item.prescriptionApproved)
+    const requiresPrescription = cart.some(
+      (item) => item.requiresPrescription && !item.prescriptionApproved
+    );
 
     if (requiresPrescription && !prescriptionUploaded) {
-      toast.error("Please upload prescription for prescription medicines")
-      return
+      toast.error("Please upload prescription for prescription medicines");
+      return;
     }
 
     if (cart.length === 0) {
-      toast.error("Cart is empty")
-      return
+      toast.error("Cart is empty");
+      return;
     }
 
-    setIsCheckingOut(true)
+    setIsCheckingOut(true);
     try {
       // Prepare order items
       const orderItems = cart.map((item) => ({
         medicationId: item.medicationId,
         quantity: item.quantity,
         prescriptionId: item.prescriptionApproved ? "approved" : undefined,
-      }))
+      }));
 
       // Default shipping address (in production, collect from user)
       const shippingAddress = {
@@ -164,27 +172,31 @@ export default function PharmacyPageContent() {
         state: "Maharashtra",
         zipCode: "400001",
         country: "India",
-      }
+      };
 
       // Create order
-      const order = await pharmacyService.createOrder(user.id, orderItems, shippingAddress)
+      const order = await pharmacyService.createOrder(
+        user.id,
+        orderItems,
+        shippingAddress
+      );
 
       toast.success("Order placed successfully!", {
         description: `Order ID: ${order.id}`,
-      })
+      });
 
       // Clear cart and redirect
-      clearCart()
-      router.push(`/orders/${order.id}`)
+      clearCart();
+      router.push(`/orders/${order.id}`);
     } catch (error: any) {
-      console.error("Checkout failed:", error)
+      console.error("Checkout failed:", error);
       toast.error("Checkout failed", {
         description: error.message || "Please try again",
-      })
+      });
     } finally {
-      setIsCheckingOut(false)
+      setIsCheckingOut(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -192,14 +204,21 @@ export default function PharmacyPageContent() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8 text-center space-y-2">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground">Pharmacy Services</h1>
-          <p className="text-base md:text-lg text-muted-foreground">Order medications with fast, reliable delivery</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground">
+            Pharmacy Services
+          </h1>
+          <p className="text-base md:text-lg text-muted-foreground">
+            Order medications with fast, reliable delivery
+          </p>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Left Column - Medications */}
           <div className="lg:col-span-2 space-y-6">
-            <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+            <SearchBar
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+            />
             <CategoryFilter
               categories={CATEGORIES}
               selectedCategory={selectedCategory}
@@ -213,7 +232,10 @@ export default function PharmacyPageContent() {
             ) : (
               <MedicationGrid
                 medications={medications}
-                cart={cart.map((item) => ({ medicationId: item.medicationId, quantity: item.quantity }))}
+                cart={cart.map((item) => ({
+                  medicationId: item.medicationId,
+                  quantity: item.quantity,
+                }))}
                 prescriptionUploaded={prescriptionUploaded}
                 onAddToCart={addToCart}
               />
@@ -223,7 +245,10 @@ export default function PharmacyPageContent() {
           {/* Right Column - Cart & Prescription */}
           <div className="space-y-6">
             {/* Prescription Upload */}
-            <PrescriptionUpload isUploaded={prescriptionUploaded} onUploadStatusChange={setPrescriptionUploaded} />
+            <PrescriptionUpload
+              isUploaded={prescriptionUploaded}
+              onUploadStatusChange={setPrescriptionUploaded}
+            />
 
             {/* Shopping Cart */}
             <ShoppingCart
@@ -233,6 +258,73 @@ export default function PharmacyPageContent() {
               onUpdateQuantity={updateQuantity}
               onClearCart={clearCart}
             />
+
+            {/* Order Summary */}
+            {cart.length > 0 && (
+              <div className="space-y-4 p-4 bg-card border border-border rounded-xl shadow-lg">
+                <h3 className="font-semibold text-foreground text-lg">
+                  Order Summary
+                </h3>
+
+                {/* Subtotal */}
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="font-medium">
+                    ₹
+                    {cart
+                      .reduce(
+                        (sum, item) => sum + item.price * item.quantity,
+                        0
+                      )
+                      .toFixed(2)}
+                  </span>
+                </div>
+
+                {/* Delivery Fee Calculation */}
+                {(() => {
+                  const subtotal = cart.reduce(
+                    (sum, item) => sum + item.price * item.quantity,
+                    0
+                  );
+                  const deliveryFee = subtotal >= 500 ? 0 : 50;
+                  const tax = (subtotal + deliveryFee) * 0.08;
+                  const total = subtotal + deliveryFee + tax;
+
+                  return (
+                    <>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">
+                          Delivery Fee
+                        </span>
+                        <span
+                          className={
+                            deliveryFee === 0
+                              ? "text-success font-medium"
+                              : "font-medium"
+                          }
+                        >
+                          {deliveryFee === 0
+                            ? "FREE"
+                            : `₹${deliveryFee.toFixed(2)}`}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Tax (8%)</span>
+                        <span className="font-medium">₹{tax.toFixed(2)}</span>
+                      </div>
+
+                      <div className="pt-2 border-t border-border flex justify-between font-bold text-lg">
+                        <span>Total</span>
+                        <span className="text-primary">
+                          ₹{total.toFixed(2)}
+                        </span>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            )}
 
             {/* Checkout Button */}
             {cart.length > 0 && (
@@ -255,5 +347,5 @@ export default function PharmacyPageContent() {
         </div>
       </main>
     </div>
-  )
+  );
 }

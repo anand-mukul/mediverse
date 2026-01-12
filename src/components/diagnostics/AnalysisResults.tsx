@@ -46,15 +46,15 @@ export default function AnalysisResults({
   const getUrgencyColor = (urgency: string) => {
     switch (urgency) {
       case "emergency":
-        return "bg-red-100 text-red-800 border-red-200";
+        return "bg-destructive/10 text-destructive border-destructive/30";
       case "urgent":
-        return "bg-orange-100 text-orange-800 border-orange-200";
+        return "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/30";
       case "routine":
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30";
       case "monitor":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/30";
       default:
-        return "bg-slate-100 text-slate-800 border-slate-200";
+        return "bg-muted text-foreground border-border";
     }
   };
 
@@ -76,18 +76,17 @@ export default function AnalysisResults({
   const getProbabilityColor = (probability: string) => {
     switch (probability) {
       case "high":
-        return "bg-red-100 text-red-800";
+        return "bg-destructive/10 text-destructive";
       case "medium":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400";
       case "low":
-        return "bg-green-100 text-green-800";
+        return "bg-green-500/10 text-green-600 dark:text-green-400";
       default:
-        return "bg-slate-100 text-slate-800";
+        return "bg-muted text-foreground";
     }
   };
 
   const exportAnalysis = () => {
-    // In a real app, this would generate a PDF or download the analysis
     const timestamp = analysis.timestamp || new Date();
     const safeDate =
       timestamp instanceof Date ? timestamp : new Date(timestamp);
@@ -157,17 +156,19 @@ ${analysis.analysis.disclaimer}
             <AlertTriangle
               className={`h-6 w-6 ${
                 analysis.analysis.urgency === "emergency"
-                  ? "text-red-600"
+                  ? "text-destructive"
                   : analysis.analysis.urgency === "urgent"
-                  ? "text-orange-600"
+                  ? "text-orange-600 dark:text-orange-400"
                   : analysis.analysis.urgency === "routine"
-                  ? "text-blue-600"
-                  : "text-green-600"
+                  ? "text-blue-600 dark:text-blue-400"
+                  : "text-green-600 dark:text-green-400"
               }`}
             />
             <div>
-              <h4 className="font-bold text-lg">Urgency Assessment</h4>
-              <p className="text-sm">
+              <h4 className="font-bold text-lg text-foreground">
+                Urgency Assessment
+              </h4>
+              <p className="text-sm text-foreground/80">
                 {getUrgencyLabel(analysis.analysis.urgency)}
               </p>
             </div>
@@ -175,16 +176,16 @@ ${analysis.analysis.disclaimer}
         </div>
 
         {/* Symptoms Summary */}
-        <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-          <h4 className="font-semibold text-slate-900 mb-2">
+        <div className="p-4 bg-muted rounded-xl border border-border">
+          <h4 className="font-semibold text-foreground mb-2">
             Symptoms Analyzed
           </h4>
-          <p className="text-slate-700">{analysis.symptoms}</p>
+          <p className="text-foreground/80">{analysis.symptoms}</p>
         </div>
 
         {/* Possible Conditions */}
         <div>
-          <h4 className="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+          <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-purple-600" />
             Possible Conditions (AI Assessment)
           </h4>
@@ -193,44 +194,36 @@ ${analysis.analysis.disclaimer}
             {analysis.analysis.possibleConditions.map((condition, index) => (
               <div
                 key={index}
-                className="p-4 rounded-xl border border-slate-200 hover:border-blue-200 hover:bg-blue-50/50 transition-colors"
+                className="p-4 rounded-xl border border-border hover:border-primary hover:bg-primary/5 transition-colors"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <h5 className="font-bold text-slate-900 text-lg">
+                    <h5 className="font-bold text-foreground text-lg">
                       {condition.condition}
                     </h5>
-                    <p className="text-sm text-slate-600 mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       {condition.description}
                     </p>
                   </div>
-
-                  <div className="text-right">
-                    <span
-                      className={`text-xs font-medium px-3 py-1 rounded-full ${getProbabilityColor(
-                        condition.probability
-                      )}`}
-                    >
-                      {condition.probability.toUpperCase()} PROBABILITY
-                    </span>
-                    <div className="text-sm font-bold text-slate-900 mt-1">
-                      {Math.round(condition.confidence * 100)}% Confidence
-                    </div>
-                  </div>
+                  <span
+                    className={`text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap ${getProbabilityColor(
+                      condition.probability
+                    )}`}
+                  >
+                    {condition.probability.toUpperCase()}
+                  </span>
                 </div>
 
-                {/* Confidence Bar */}
-                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${
-                      condition.probability === "high"
-                        ? "bg-gradient-to-r from-red-500 to-orange-500"
-                        : condition.probability === "medium"
-                        ? "bg-gradient-to-r from-yellow-500 to-amber-500"
-                        : "bg-gradient-to-r from-green-500 to-emerald-500"
-                    }`}
-                    style={{ width: `${condition.confidence * 100}%` }}
-                  />
+                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                  <div>
+                    Confidence: {Math.round(condition.confidence * 100)}%
+                  </div>
+                  <div className="w-full bg-border rounded-full h-2">
+                    <div
+                      className="bg-primary h-2 rounded-full"
+                      style={{ width: `${condition.confidence * 100}%` }}
+                    />
+                  </div>
                 </div>
               </div>
             ))}
@@ -238,67 +231,71 @@ ${analysis.analysis.disclaimer}
         </div>
 
         {/* Recommendations */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
-            <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-blue-600" />
-              Immediate Recommendations
-            </h4>
-            <ul className="space-y-2">
-              {analysis.analysis.recommendations.map((rec, index) => (
-                <li
-                  key={index}
-                  className="text-sm text-blue-800 flex items-start gap-2"
-                >
-                  <CheckCircle className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                  {rec}
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div>
+          <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+            <Stethoscope className="h-5 w-5 text-blue-600" />
+            Recommendations
+          </h4>
+          <ul className="space-y-2">
+            {analysis.analysis.recommendations.map((rec, index) => (
+              <li
+                key={index}
+                className="flex items-start gap-3 text-sm text-foreground/80"
+              >
+                <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                {rec}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-          <div className="p-4 bg-green-50 rounded-xl border border-green-200">
-            <h4 className="font-semibold text-green-900 mb-3 flex items-center gap-2">
-              <Stethoscope className="h-5 w-5 text-green-600" />
-              Recommended Next Steps
-            </h4>
-            <ul className="space-y-2">
-              {analysis.analysis.nextSteps.map((step, index) => (
-                <li
-                  key={index}
-                  className="text-sm text-green-800 flex items-start gap-2"
-                >
-                  <div className="w-2 h-2 bg-green-500 rounded-full mt-1.5 flex-shrink-0" />
-                  {step}
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Next Steps */}
+        <div>
+          <h4 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-orange-600" />
+            Next Steps
+          </h4>
+          <ol className="space-y-2">
+            {analysis.analysis.nextSteps.map((step, index) => (
+              <li
+                key={index}
+                className="flex items-start gap-3 text-sm text-foreground/80"
+              >
+                <span className="font-bold text-primary">{index + 1}.</span>
+                {step}
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="p-4 bg-warning/10 border border-warning/30 rounded-xl">
+          <p className="text-xs text-foreground/80 italic">
+            {analysis.analysis.disclaimer}
+          </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-200">
-          <Button
-            onClick={onBookConsultation}
-            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white gap-2"
-          >
-            <Calendar className="h-4 w-4" />
-            Book Consultation
-          </Button>
-
+        <div className="flex gap-3 pt-4">
           <Button
             onClick={exportAnalysis}
             variant="outline"
-            className="border-purple-300 text-purple-600 hover:bg-purple-50 hover:text-purple-700 gap-2 bg-transparent"
+            className="flex-1 cursor-pointer bg-transparent"
           >
-            <Download className="h-4 w-4" />
+            <Download className="h-4 w-4 mr-2" />
             Export Report
           </Button>
-
+          <Button
+            onClick={onBookConsultation}
+            className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
+          >
+            <Stethoscope className="h-4 w-4 mr-2" />
+            Book Consultation
+          </Button>
           <Button
             onClick={onClear}
             variant="outline"
-            className="border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-slate-700 bg-transparent"
+            className="flex-1 cursor-pointer bg-transparent"
           >
             New Analysis
           </Button>

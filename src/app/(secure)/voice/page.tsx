@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import VoiceHeader from "@/components/voice-command/VoiceHeader";
@@ -8,6 +8,7 @@ import VoiceInterface from "@/components/voice-command/VoiceInterface";
 import ChatHistory from "@/components/voice-command/ChatHistory";
 import { voiceService } from "@/services/voice.service";
 import { authService } from "@/services/auth.service";
+import { getVoiceEngine } from "@/services/voice-engine.service";
 
 interface ChatMessage {
   id: string;
@@ -25,9 +26,45 @@ interface ChatMessage {
 export default function VoiceCommandPage() {
   const router = useRouter();
   const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState("");
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
-  // const [audioLevel, setAudioLevel] = useState(0)
+  const [audioLevel, setAudioLevel] = useState(0);
+  const voiceEngine = getVoiceEngine({
+    onTranscriptUpdate: setTranscript,
+    onAudioLevelUpdate: setAudioLevel,
+    onError: (error) => toast.error(error),
+    onProcessing: setIsProcessing,
+  });
+
+  const handleToggleListening = useCallback(async () => {
+    try {
+      if (isListening) {
+        voiceEngine.stopListening();
+        setIsListening(false);
+
+        // Process the recorded transcript
+        const userTranscript = voiceEngine.getTranscript().trim();
+        if (userTranscript) {
+          await handleVoiceCommand(userTranscript);
+        }
+        voiceEngine.resetTranscript();
+        setTranscript("");
+      } else {
+        if (!voiceEngine.isSupported()) {
+          toast.error("Voice recognition not supported in your browser");
+          return;
+        }
+        await voiceEngine.startListening();
+        setIsListening(true);
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Voice error occurred"
+      );
+      setIsListening(false);
+    }
+  }, [isListening, voiceEngine]);
 
   const handleVoiceCommand = async (text: string) => {
     const user = authService.getStoredUser();
@@ -39,17 +76,26 @@ export default function VoiceCommandPage() {
 
     setIsProcessing(true);
     try {
+      // Add user message to chat
+      const userMessage: ChatMessage = {
+        id: `user-${Date.now()}`,
+        type: "user",
+        text: text,
+        timestamp: new Date(),
+      };
+      setChatHistory((prev) => [userMessage, ...prev]);
+
       const result = await voiceService.processVoiceQuery({ query: text });
 
       const chatMessage: ChatMessage = {
-        id: result.id,
+        id: result.id || `ai-${Date.now()}`,
         type: "ai",
         text: result.response,
-        timestamp: new Date(result.timestamp),
+        timestamp: new Date(result.timestamp || new Date()),
         data: {
           intent: result.action || "general",
           response: result.response,
-          urgency: "low",
+          urgency: determineUrgency(result.action),
           confidence: 0.8,
         },
       };
@@ -62,10 +108,34 @@ export default function VoiceCommandPage() {
       }
     } catch (err) {
       console.error("Voice command error:", err);
+      const errorMessage: ChatMessage = {
+        id: `error-${Date.now()}`,
+        type: "error",
+        text: "Failed to process your command. Please try again.",
+        timestamp: new Date(),
+      };
+      setChatHistory((prev) => [errorMessage, ...prev]);
       toast.error("Failed to process command");
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  const handleTextCommand = (text: string) => {
+    handleVoiceCommand(text);
+  };
+
+  const determineUrgency = (
+    action: string | undefined
+  ): "low" | "medium" | "high" | "critical" => {
+    if (!action) return "low";
+    const urgencyMap: Record<string, "low" | "medium" | "high" | "critical"> = {
+      emergency: "critical",
+      urgent: "high",
+      appointment: "medium",
+      general: "low",
+    };
+    return urgencyMap[action.toLowerCase()] || "low";
   };
 
   return (
@@ -78,18 +148,19 @@ export default function VoiceCommandPage() {
             Voice Assistant
           </h1>
           <p className="text-base md:text-lg text-muted-foreground">
-            Control your health services with voice commands
+            Communicate with your health assistant in real-time using voice
+            commands
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
           <VoiceInterface
             isListening={isListening}
-            transcript=""
-            audioLevel={0}
+            transcript={transcript}
+            audioLevel={audioLevel}
             isProcessing={isProcessing}
-            onToggleListening={() => setIsListening(!isListening)}
-            onTextCommand={handleVoiceCommand}
+            onToggleListening={handleToggleListening}
+            onTextCommand={handleTextCommand}
           />
 
           <ChatHistory
